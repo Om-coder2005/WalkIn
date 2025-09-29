@@ -809,7 +809,7 @@
     
     <!-- Clear Cache Button (for testing) -->
     <div style="text-align: center; margin-bottom: 1rem;">
-      <button onclick="clearAllCache(); resetAllForms(); location.reload();" 
+      <button onclick="clearAllCache(); alert('All client-side data cleared. Please refresh the page manually if needed.');"
               style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
         🔄 Clear All Data & Refresh
       </button>
@@ -1070,10 +1070,10 @@
       if (file && file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (ev) => {
-          profileImage = ev.target.result;
-          imagePreview.innerHTML = `<img src="${profileImage}" alt="Profile">`;
+          imagePreview.innerHTML = `<img src="${ev.target.result}" alt="Profile">`;
         };
         reader.readAsDataURL(file);
+        profileImage = file; // <-- ADD this line to store the raw File object
       }
     };
       }
@@ -1314,10 +1314,11 @@
       
       try {
         // Upload profile image if selected
-        if (profileImage && typeof profileImage === 'object') {
-          const imageRef = ref(storage, `profiles/${currentUser.uid}/profile.jpg`);
-          await uploadBytes(imageRef, profileImage);
-          data.profileImageUrl = await getDownloadURL(imageRef);
+        const imageFileToUpload = document.getElementById('imageUpload').files[0];
+        if (imageFileToUpload) {
+            const imageRef = ref(storage, `profiles/${currentUser.uid}/profile.jpg`);
+            await uploadBytes(imageRef, imageFileToUpload);
+            data.profileImageUrl = await getDownloadURL(imageRef);
         }
         
         // Save profile to Firestore
@@ -1896,7 +1897,6 @@
     }
     
     // Call functions on page load
-    clearAllCache();
     
     // Wait for elements to be initialized before debugging
     setTimeout(() => {
