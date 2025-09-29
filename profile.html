@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile - WalkIn</title>
+  <style>
+    :root{
+      --primary:#6c574c;
+      --primary-dark:#5a4940;
+      --accent:#4e6758;
+      --accent-light:#668673;
+      --bg:#fbf9f4;
+      --surface:#fefefe;
+      --text:#30251f;
+      --text-light:#5e534f;
+      --muted:#8b7f75;
+      --border:#c7bfba;
+      --border-light:#e5e0dc;
+      --shadow:0 2px 4px rgba(0,0,0,0.05);
+      --shadow-lg:0 5px 15px rgba(0,0,0,0.08);
+      --radius:10px;
+      --radius-lg:16px;
+    }
+    
+    *{box-sizing:border-box;margin:0;padding:0}
+    
+    body{
+      font-family:'Inter',sans-serif;
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.6;
+      font-size:15px;
+      padding:20px;
+    }
+    
+    .container{
+      max-width:800px;
+      margin:0 auto;
+    }
+    
+    h1{
+      font-family:'Caveat',cursive;
+      font-size:2.5rem;
+      color:var(--text);
+      text-align:center;
+      margin-bottom:10px;
+    }
+    
+    .subtitle{
+      text-align:center;
+      color:var(--muted);
+      margin-bottom:30px;
+    }
+    
+    /* Form Styles */
+    .profile-form{
+      background:var(--surface);
+      border-radius:var(--radius-lg);
+      padding:30px;
+      box-shadow:var(--shadow-lg);
+      margin-bottom:30px;
+    }
+    
+    .profile-form.hidden{display:none}
+    
+    .form-section{margin-bottom:30px}
+    
+    .section-title{
+      font-family:'Caveat',cursive;
+      font-size:1.4rem;
+      color:var(--primary);
+      margin-bottom:20px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+    
+    .form-field{margin-bottom:20px}
+    .form-field.full-width{grid-column:1/-1}
+    
+    label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:600;
+      color:var(--text-light);
+      font-size:14px;
+    }
+    
+    .required{color:var(--primary)}
+    
+    input,textarea,select{
+      width:100%;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      font-size:14px;
+      font-family:inherit;
+      background:var(--surface);
+      transition:border-color 0.2s;
+    }
+    
+    input:focus,textarea:focus,select:focus{
+      outline:none;
+      border-color:var(--primary);
+    }
+    
+    textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+    
+    /* Image Upload */
+    .image-upload-section{
+      text-align:center;
+      margin-bottom:30px;
+    }
+    
+    .profile-image-preview{
+      width:100px;
+      height:100px;
+      border-radius:50%;
+      background:var(--primary);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:2rem;
+      font-weight:700;
+      cursor:pointer;
+      overflow:hidden;
+      margin-bottom:10px;
+      transition:transform 0.2s;
+    }
+    
+    .profile-image-preview:hover{
+      transform:scale(1.05);
+    }
+    
+    .profile-image-preview img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    
+    #imageUpload{display:none}
+    
+    /* Toggle */
+    .availability-toggle{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    
+    .toggle{
+      width:50px;
+      height:26px;
+      background:var(--border);
+      border-radius:13px;
+      cursor:pointer;
+      position:relative;
+      transition:background 0.3s;
+    }
+    
+    .toggle.active{background:var(--accent)}
+    
+    .toggle::after{
+      content:'';
+      position:absolute;
+      top:2px;
+      left:2px;
+      width:22px;
+      height:22px;
+      background:white;
+      border-radius:50%;
+      transition:left 0.3s;
+      box-shadow:var(--shadow);
+    }
+    
+    .toggle.active::after{left:26px}
+    
+    /* Buttons */
+    .btn{
+      padding:12px 24px;
+      border:none;
+      border-radius:var(--radius);
+      font-weight:600;
+      font-size:14px;
+      cursor:pointer;
+      transition:all 0.2s;
+    }
+    
+    .btn-primary{
+      background:var(--primary);
+      color:white;
+    }
+    
+    .btn-primary:hover{
+      background:var(--primary-dark);
+      transform:translateY(-1px);
+    }
+    
+    .btn-secondary{
+      background:var(--border-light);
+      color:var(--text);
+    }
+    
+    .btn-secondary:hover{
+      background:var(--border);
+    }
+    
+    .btn-edit{
+      background:var(--accent);
+      color:white;
+    }
+    
+    .btn-edit:hover{
+      background:var(--accent-light);
+      transform:translateY(-1px);
+    }
+    
+    .form-actions{
+      display:flex;
+      gap:16px;
+      justify-content:center;
+      margin-top:30px;
+    }
+    
+    /* Profile Card */
+    .profile-card{
+      background:var(--surface);
+      border-radius:var(--radius-lg);
+      padding:30px;
+      box-shadow:var(--shadow-lg);
+      display:none;
+      margin-bottom:20px;
+    }
+    
+    .profile-card.show{
+      display:block;
+      animation:slideIn 0.4s ease;
+    }
+    
+    @keyframes slideIn{
+      from{opacity:0;transform:translateY(20px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    
+    @keyframes spin{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
+    
+    .card-header{
+      text-align:center;
+      padding-bottom:20px;
+      border-bottom:1px dashed var(--border);
+      margin-bottom:20px;
+    }
+    
+    .card-profile-image{
+      width:80px;
+      height:80px;
+      border-radius:50%;
+      background:var(--primary);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-size:1.8rem;
+      margin-bottom:15px;
+      overflow:hidden;
+    }
+    
+    .card-profile-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    
+    .card-name{
+      font-size:1.6rem;
+      font-weight:700;
+      color:var(--primary);
+      margin-bottom:5px;
+    }
+    
+    .card-title{
+      color:var(--text-light);
+      margin-bottom:10px;
+    }
+    
+    .availability-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 12px;
+      border-radius:20px;
+      font-size:13px;
+      font-weight:600;
+    }
+    
+    .availability-badge.available{
+      background:rgba(78,103,88,0.1);
+      color:var(--accent);
+    }
+    
+    .availability-badge.unavailable{
+      background:rgba(139,127,117,0.1);
+      color:var(--muted);
+    }
+    
+    .card-content{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      margin-bottom:20px;
+    }
+    
+    .card-section{
+      padding:15px;
+      background:rgba(108,87,76,0.03);
+      border-radius:var(--radius);
+    }
+    
+    .card-section.full-width{grid-column:1/-1}
+    
+    .card-section h3{
+      font-size:1rem;
+      color:var(--primary);
+      margin-bottom:12px;
+      font-weight:600;
+    }
+    
+    .info-item{
+      margin-bottom:8px;
+      font-size:14px;
+    }
+    
+    .info-label{
+      font-weight:600;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    
+    .skills-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-top:8px;
+    }
+    
+    .skill-tag{
+      background:var(--primary);
+      color:white;
+      padding:4px 10px;
+      border-radius:12px;
+      font-size:12px;
+    }
+    
+    .card-actions{
+      text-align:center;
+      padding-top:20px;
+      border-top:1px dashed var(--border);
+    }
+    
+    /* Activity Sections */
+    .activity-sections{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+      margin-top:30px;
+    }
+    
+    .activity-sections.hidden{display:none}
+    
+    .activity-card{
+      background:var(--surface);
+      border-radius:var(--radius);
+      padding:20px;
+      text-align:center;
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      transition:all 0.2s;
+    }
+    
+    .activity-card:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-lg);
+    }
+    
+    .activity-icon{
+      font-size:2rem;
+      margin-bottom:10px;
+    }
+    
+    .activity-title{
+      font-weight:600;
+      color:var(--text);
+      margin-bottom:5px;
+    }
+    
+    .activity-count{
+      font-size:1.5rem;
+      font-weight:700;
+      color:var(--primary);
+    }
+    
+    .success-message{
+      background:var(--accent);
+      color:white;
+      padding:12px;
+      border-radius:var(--radius);
+      text-align:center;
+      margin-bottom:20px;
+      display:none;
+    }
+    
+    .success-message.show{
+      display:block;
+      animation:slideIn 0.3s ease;
+    }
+    
+    /* Profile Tabs */
+    .profile-tabs{
+      background:var(--surface);
+      border-radius:var(--radius-lg);
+      box-shadow:var(--shadow-lg);
+      margin-top:30px;
+    }
+    
+    .tab-navigation{
+      display:flex;
+      border-bottom:1px solid var(--border-light);
+      background:var(--bg);
+      border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    
+    .tab-btn{
+      flex:1;
+      padding:16px 20px;
+      border:none;
+      background:none;
+      font-weight:600;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all 0.2s;
+      border-bottom:3px solid transparent;
+    }
+    
+    .tab-btn.active{
+      color:var(--primary);
+      border-bottom-color:var(--primary);
+      background:var(--surface);
+    }
+    
+    .tab-btn:hover{
+      color:var(--text);
+      background:var(--border-light);
+    }
+    
+    .tab-content{
+      display:none;
+      padding:30px;
+    }
+    
+    .tab-content.active{
+      display:block;
+    }
+    
+    /* Job Form */
+    .job-form{
+      background:var(--bg);
+      border-radius:var(--radius);
+      padding:20px;
+      margin-bottom:30px;
+    }
+    
+    .job-form .form-grid{
+      grid-template-columns:1fr 1fr;
+    }
+    
+    /* Jobs List */
+    .jobs-list{
+      display:grid;
+      gap:20px;
+    }
+    
+    .job-card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:20px;
+      transition:all 0.2s;
+    }
+    
+    .job-card:hover{
+      box-shadow:var(--shadow);
+      transform:translateY(-2px);
+    }
+    
+    .job-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      margin-bottom:15px;
+    }
+    
+    .job-title{
+      font-size:1.2rem;
+      font-weight:600;
+      color:var(--primary);
+      margin:0;
+    }
+    
+    .job-price{
+      font-size:1.1rem;
+      font-weight:700;
+      color:var(--accent);
+    }
+    
+    .job-category{
+      display:inline-block;
+      background:var(--primary);
+      color:white;
+      padding:4px 10px;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:600;
+      margin-bottom:10px;
+    }
+    
+    .job-description{
+      color:var(--text-light);
+      margin-bottom:15px;
+      line-height:1.5;
+    }
+    
+    .job-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    
+    .btn-small{
+      padding:8px 16px;
+      font-size:13px;
+    }
+    
+    .btn-success{
+      background:var(--accent);
+      color:white;
+    }
+    
+    .btn-danger{
+      background:#dc3545;
+      color:white;
+    }
+    
+    .btn-warning{
+      background:#ffc107;
+      color:#212529;
+    }
+    
+    .applicants-section{
+      margin-top:20px;
+      padding-top:20px;
+      border-top:1px dashed var(--border);
+    }
+    
+    .applicant-card{
+      background:var(--bg);
+      border:1px solid var(--border-light);
+      border-radius:var(--radius);
+      padding:15px;
+      margin-bottom:10px;
+    }
+    
+    .applicant-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    }
+    
+    .applicant-name{
+      font-weight:600;
+      color:var(--text);
+    }
+    
+    .application-status{
+      padding:4px 8px;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:600;
+    }
+    
+    .status-pending{
+      background:rgba(255,193,7,0.2);
+      color:#856404;
+    }
+    
+    .status-accepted{
+      background:rgba(40,167,69,0.2);
+      color:#155724;
+    }
+    
+    .status-rejected{
+      background:rgba(220,53,69,0.2);
+      color:#721c24;
+    }
+    
+    .empty-state{
+      text-align:center;
+      color:var(--muted);
+      padding:40px 20px;
+      font-style:italic;
+    }
+    
+    .job-image{
+      width:100%;
+      border-radius:8px;
+      margin:10px 0;
+    }
+    
+    /* Navigation styles */
+    .nav-header{
+      background:var(--surface);
+      border-bottom:2px dashed var(--border-light);
+      padding:1rem 0;
+      margin-bottom:2rem;
+    }
+    
+    .nav-container{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    
+    .nav-logo{
+      font-family:'Caveat',cursive;
+      font-size:1.6rem;
+      font-weight:700;
+      color:var(--primary);
+      text-decoration:none;
+    }
+    
+    .nav-links{
+      display:flex;
+      gap:1rem;
+    }
+    
+    .nav-links a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:500;
+    }
+    
+    .nav-links a.active{
+      color:var(--primary);
+      font-weight:600;
+    }
+    
+    /* Loading state styles */
+    .loading-container{
+      text-align:center;
+      padding:2rem;
+      display:none;
+    }
+    
+    .loading-text{
+      font-size:1.2rem;
+      color:var(--muted);
+      margin-bottom:1rem;
+    }
+    
+    .loading-spinner{
+      width:40px;
+      height:40px;
+      border:3px solid var(--border-light);
+      border-top:3px solid var(--primary);
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+      margin:0 auto;
+    }
+    
+    @media (max-width:768px){
+      .form-grid,.card-content{grid-template-columns:1fr}
+      .activity-sections{grid-template-columns:1fr}
+      .form-actions{flex-direction:column}
+      .btn{width:100%}
+      .tab-navigation{flex-direction:column}
+      .job-form .form-grid{grid-template-columns:1fr}
+      .job-header{flex-direction:column;gap:10px}
+      .job-actions{justify-content:center}
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation Header -->
+  <nav class="nav-header">
+    <div class="container nav-container">
+      <a href="home.html" class="nav-logo">WalkIn</a>
+      <div class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="explore.html">Explore</a>
+        <a href="profile.html" class="active">Profile</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>My Profile</h1>
+    <p class="subtitle">Complete your profile to connect with more opportunities</p>
+    
+    <div class="success-message" id="successMessage">
+      Profile updated successfully!
+    </div>
+    
+    <!-- Loading State -->
+    <div id="loadingState" class="loading-container">
+      <div class="loading-text">Loading your profile...</div>
+      <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- New User Welcome Message -->
+    <div id="newUserWelcome" class="welcome-message" style="display: none;">
+      <div style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 2rem; border-radius: var(--radius-lg); text-align: center; margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1rem; font-family: 'Caveat', cursive; font-size: 2rem;">Welcome to WalkIn! 🎉</h2>
+        <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">Complete your profile below to start posting jobs or applying to opportunities</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: var(--radius); flex: 1; min-width: 200px;">
+            <h3 style="margin-bottom: 0.5rem;">📮 For Service Providers</h3>
+            <p style="font-size: 0.9rem;">Post jobs and find skilled workers</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: var(--radius); flex: 1; min-width: 200px;">
+            <h3 style="margin-bottom: 0.5rem;">🔍 For Job Seekers</h3>
+            <p style="font-size: 0.9rem;">Find opportunities and apply with your skills</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Profile Card (Hidden initially) -->
+    <div class="profile-card" id="profileCard">
+      <div class="card-header">
+        <div class="card-profile-image" id="cardProfileImage">
+          <span id="cardInitial">U</span>
+        </div>
+        <h2 class="card-name" id="cardName">User Name</h2>
+        <p class="card-title" id="cardTitle">Professional</p>
+        <div class="availability-badge" id="cardAvailability">
+          <span>●</span>
+          <span id="availabilityText">Available</span>
+        </div>
+      </div>
+      
+      <div class="card-content">
+        <div class="card-section">
+          <h3>📞 Contact</h3>
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div id="cardEmail">-</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone</div>
+            <div id="cardPhone">-</div>
+          </div>
+        </div>
+        
+        <div class="card-section">
+          <h3>💼 Professional</h3>
+          <div class="info-item">
+            <div class="info-label">Experience</div>
+            <div id="cardExperience">-</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Education</div>
+            <div id="cardEducation">-</div>
+          </div>
+        </div>
+        
+        <div class="card-section full-width">
+          <h3>📝 About</h3>
+          <p id="cardBio">No bio provided</p>
+        </div>
+        
+        <div class="card-section full-width">
+          <h3>🔧 Skills</h3>
+          <div class="skills-list" id="cardSkills">
+            <span class="skill-tag">No skills listed</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-actions">
+        <button class="btn btn-edit" onclick="editProfile()">✏️ Edit Profile</button>
+      </div>
+    </div>
+    
+    <!-- Clear Cache Button (for testing) -->
+    <div style="text-align: center; margin-bottom: 1rem;">
+      <button onclick="clearAllCache(); resetAllForms(); location.reload();" 
+              style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+        🔄 Clear All Data & Refresh
+      </button>
+      </div>
+      
+    <!-- Profile Form (Always visible for new users) -->
+    <form class="profile-form" id="profileForm">
+      <div class="image-upload-section">
+        <div class="profile-image-preview" id="profileImagePreview">
+          <span id="profileInitial">U</span>
+        </div>
+        <input type="file" id="imageUpload" accept="image/*">
+        <p style="color:var(--muted);font-size:13px">Click to upload profile picture</p>
+      </div>
+      
+      <div class="form-section">
+        <h3 class="section-title">👤 Basic Information</h3>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="username">Username <span class="required">*</span></label>
+            <input type="text" id="username" required placeholder="Enter your username">
+          </div>
+          <div class="form-field">
+            <label for="email">Email <span class="required">*</span></label>
+            <input type="email" id="email" required placeholder="Enter your email">
+          </div>
+          <div class="form-field">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="Enter your phone number">
+          </div>
+          <div class="form-field">
+            <label for="education">Education</label>
+            <select id="education" title="Select your education level">
+              <option value="">Select Education</option>
+              <option value="High School">High School</option>
+              <option value="Diploma">Diploma</option>
+              <option value="Bachelor's">Bachelor's Degree</option>
+              <option value="Master's">Master's Degree</option>
+              <option value="PhD">PhD</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h3 class="section-title">💼 Professional Information</h3>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="occupation">Occupation</label>
+            <input type="text" id="occupation" placeholder="e.g., Designer, Teacher">
+          </div>
+          <div class="form-field">
+            <label for="experience">Experience</label>
+            <select id="experience" title="Select your experience level">
+              <option value="">Select Experience</option>
+              <option value="Fresher">Fresher (0-1 years)</option>
+              <option value="1-3 years">1-3 years</option>
+              <option value="3-5 years">3-5 years</option>
+              <option value="5-10 years">5-10 years</option>
+              <option value="10+ years">10+ years</option>
+            </select>
+          </div>
+          <div class="form-field full-width">
+            <label for="skills">Skills (comma separated)</label>
+            <input type="text" id="skills" placeholder="HTML, CSS, JavaScript">
+          </div>
+          <div class="form-field full-width">
+            <label for="bio">Bio</label>
+            <textarea id="bio" placeholder="Tell us about yourself"></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h3 class="section-title">📅 Availability</h3>
+        <div class="availability-toggle">
+          <div class="toggle" id="availToggle"></div>
+          <span id="availLabel">Currently Unavailable</span>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Profile</button>
+      </div>
+    </form>
+
+    <!-- Profile Tabs (Hidden until profile is complete) -->
+    <div class="profile-tabs hidden" id="profileTabs">
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="post">📮 Post Jobs</button>
+        <button class="tab-btn" data-tab="applied">📋 Applied</button>
+        <button class="tab-btn" data-tab="completed">✅ Completed</button>
+  </div>
+
+      <!-- Post Tab -->
+      <div class="tab-content active" id="post-tab">
+        <div class="job-form-section">
+          <h3 class="section-title">Create New Job Post</h3>
+          <form id="jobForm" class="job-form">
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="jobTitle">Job Title <span class="required">*</span></label>
+                <input type="text" id="jobTitle" required placeholder="e.g., Plumbing Service">
+              </div>
+              <div class="form-field">
+                <label for="jobCategory">Category <span class="required">*</span></label>
+                <select id="jobCategory" required title="Select job category">
+                  <option value="">Select Category</option>
+                  <option value="Plumbing">Plumbing</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Home Services">Home Services</option>
+                  <option value="Tutoring">Tutoring</option>
+                  <option value="Photography">Photography</option>
+                  <option value="Repair">Repair</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="jobPrice">Price (₹) <span class="required">*</span></label>
+                <input type="number" id="jobPrice" required placeholder="500">
+              </div>
+              <div class="form-field">
+                <label for="jobImage">Job Image</label>
+                <input type="file" id="jobImage" accept="image/*" title="Upload job image">
+              </div>
+            </div>
+            <div class="form-field full-width">
+              <label for="jobDescription">Description <span class="required">*</span></label>
+              <textarea id="jobDescription" required placeholder="Describe the job requirements..."></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Post Job</button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="posted-jobs-section">
+          <h3 class="section-title">Your Posted Jobs</h3>
+          <div id="postedJobsList" class="jobs-list">
+            <!-- Posted jobs will be loaded here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Applied Tab -->
+      <div class="tab-content" id="applied-tab">
+        <h3 class="section-title">Your Applications</h3>
+        <div id="appliedJobsList" class="jobs-list">
+          <!-- Applied jobs will be loaded here -->
+        </div>
+      </div>
+      
+      <!-- Completed Tab -->
+      <div class="tab-content" id="completed-tab">
+        <h3 class="section-title">Completed Jobs</h3>
+        <div id="completedJobsList" class="jobs-list">
+          <!-- Completed jobs will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, orderBy, addDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAOzsToiVP9BsevCDOjF54w341zIJghm_Y",
+      authDomain: "walkin-3c91d.firebaseapp.com",
+      projectId: "walkin-3c91d",
+      storageBucket: "walkin-3c91d.firebasestorage.app",
+      messagingSenderId: "145040800467",
+      appId: "1:145040800467:web:3075cc56710dd5eaef7226",
+      measurementId: "G-1EK3FBEBH7"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    // State
+    let isAvailable = false;
+    let profileImage = null;
+    let currentUser = null;
+    let userProfile = null;
+    
+    // Error handling function
+    function showError(message) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error-message';
+      errorDiv.style.cssText = `
+        background: #dc3545;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+        animation: slideIn 0.3s ease;
+      `;
+      errorDiv.textContent = message;
+      
+      const container = document.querySelector('.container');
+      container.insertBefore(errorDiv, container.firstChild);
+      
+      setTimeout(() => {
+        errorDiv.remove();
+      }, 5000);
+    }
+    
+    // Success message function
+    function showSuccess(message) {
+      const successDiv = document.createElement('div');
+      successDiv.className = 'success-message';
+      successDiv.style.cssText = `
+        background: var(--accent);
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+        animation: slideIn 0.3s ease;
+      `;
+      successDiv.textContent = message;
+      
+      const container = document.querySelector('.container');
+      container.insertBefore(successDiv, container.firstChild);
+      
+      setTimeout(() => {
+        successDiv.remove();
+      }, 3000);
+    }
+    
+    // Elements - Initialize after DOM is ready
+    let form, card, sections, successMsg, imagePreview, imageUpload, availToggle, availLabel;
+    
+    function initializeElements() {
+      form = document.getElementById('profileForm');
+      card = document.getElementById('profileCard');
+      sections = document.getElementById('activitySections');
+      successMsg = document.getElementById('successMessage');
+      imagePreview = document.getElementById('profileImagePreview');
+      imageUpload = document.getElementById('imageUpload');
+      availToggle = document.getElementById('availToggle');
+      availLabel = document.getElementById('availLabel');
+      
+      // Initialize image upload and availability toggle
+      if (imagePreview && imageUpload) {
+    imagePreview.onclick = () => imageUpload.click();
+    
+    imageUpload.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          profileImage = ev.target.result;
+          imagePreview.innerHTML = `<img src="${profileImage}" alt="Profile">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+      }
+    
+      // Initialize availability toggle
+      if (availToggle && availLabel) {
+    availToggle.onclick = () => {
+      isAvailable = !isAvailable;
+      availToggle.classList.toggle('active', isAvailable);
+      availLabel.textContent = isAvailable ? 'Currently Available' : 'Currently Unavailable';
+    };
+      }
+    }
+    
+    // Initialize elements when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeElements);
+    } else {
+      initializeElements();
+    }
+    
+    // Image upload and availability toggle are now handled in initializeElements()
+    
+    // Authentication state listener
+    onAuthStateChanged(auth, async (user) => {
+      const loadingState = document.getElementById('loadingState');
+      
+      if (user) {
+        currentUser = user;
+        console.log('User authenticated:', user.email);
+        
+        // Show loading state
+        if (loadingState) {
+          loadingState.style.display = 'block';
+        }
+        
+        try {
+          // Load user profile first
+          await loadUserProfile();
+          
+          // Only load jobs and applications if profile exists
+          if (userProfile) {
+            await loadUserJobs();
+            await loadUserApplications();
+          }
+        } catch (error) {
+          console.error('Error loading user data:', error);
+          showError('Error loading your data. Please refresh the page.');
+        } finally {
+          // Always hide loading state
+          if (loadingState) {
+            loadingState.style.display = 'none';
+          }
+        }
+      } else {
+        // Redirect to home if not authenticated
+        console.log('No user authenticated, redirecting to home');
+        window.location.href = 'home.html';
+      }
+    });
+
+    // Load user profile from Firestore
+    async function loadUserProfile() {
+      try {
+        if (!currentUser) {
+          console.error('No current user found');
+          return;
+        }
+        
+        console.log('Loading profile for user:', currentUser.uid);
+        const profileRef = doc(db, 'profiles', currentUser.uid);
+        const profileSnap = await getDoc(profileRef);
+        
+        if (profileSnap.exists()) {
+          // Returning user - profile exists
+          userProfile = profileSnap.data();
+          console.log('Profile found for returning user:', userProfile.username);
+          displayProfile();
+        } else {
+          // New user - no profile exists
+          console.log('No profile found, showing create profile form for new user');
+          showNewUserFlow();
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        showError('Error loading profile. Please refresh the page and try again.');
+        // Show form as fallback
+        showNewUserFlow();
+      }
+    }
+    
+    // Show new user flow (create profile form)
+    function showNewUserFlow() {
+      // Hide all existing content
+      if (card) card.classList.add('hidden');
+      if (document.getElementById('profileTabs')) {
+        document.getElementById('profileTabs').classList.add('hidden');
+      }
+      
+      // Show welcome message and form
+      const welcomeMsg = document.getElementById('newUserWelcome');
+      if (welcomeMsg) {
+        welcomeMsg.style.display = 'block';
+      }
+      if (form) {
+        form.classList.remove('hidden');
+      }
+      
+      // Reset form to clean state
+      if (form) {
+        form.reset();
+      }
+      
+      // Reset profile image
+      if (imagePreview) {
+        imagePreview.innerHTML = '<span id="profileInitial">U</span>';
+      }
+      
+      // Reset availability
+      isAvailable = false;
+      if (availToggle) {
+        availToggle.classList.remove('active');
+      }
+      if (availLabel) {
+        availLabel.textContent = 'Currently Unavailable';
+      }
+    }
+
+    // Display profile data for returning users
+    function displayProfile() {
+      if (!userProfile) {
+        console.error('No user profile data to display');
+        return;
+      }
+      
+      console.log('Displaying profile for returning user:', userProfile.username);
+      
+      // Hide welcome message and form
+      const welcomeMsg = document.getElementById('newUserWelcome');
+      if (welcomeMsg) {
+        welcomeMsg.style.display = 'none';
+      }
+      if (form) {
+        form.classList.add('hidden');
+      }
+      
+      // Update profile card with user data
+      updateProfileCard();
+      
+      // Show profile card and tabs
+      if (card) {
+        card.classList.add('show');
+        card.classList.remove('hidden');
+      }
+      
+      const profileTabs = document.getElementById('profileTabs');
+      if (profileTabs) {
+        profileTabs.classList.remove('hidden');
+      }
+      
+      console.log('Profile displayed successfully for returning user');
+    }
+
+    // Update profile card display
+    function updateProfileCard() {
+      if (!userProfile) return;
+      
+      // Update card elements
+      if (userProfile.profileImageUrl) {
+        document.getElementById('cardProfileImage').innerHTML = `<img src="${userProfile.profileImageUrl}" alt="Profile">`;
+      } else {
+        document.getElementById('cardInitial').textContent = (userProfile.username || 'U')[0].toUpperCase();
+      }
+      
+      document.getElementById('cardName').textContent = userProfile.username || 'User';
+      document.getElementById('cardTitle').textContent = userProfile.occupation || 'Professional';
+      document.getElementById('cardEmail').textContent = userProfile.email || '-';
+      document.getElementById('cardPhone').textContent = userProfile.phone || 'Not provided';
+      document.getElementById('cardEducation').textContent = userProfile.education || 'Not specified';
+      document.getElementById('cardExperience').textContent = userProfile.experience || 'Not specified';
+      document.getElementById('cardBio').textContent = userProfile.bio || 'No bio provided';
+      
+      // Update availability
+      const availBadge = document.getElementById('cardAvailability');
+      availBadge.className = `availability-badge ${userProfile.isAvailable ? 'available' : 'unavailable'}`;
+      document.getElementById('availabilityText').textContent = userProfile.isAvailable ? 'Available' : 'Unavailable';
+      
+      // Update skills
+      const skillsContainer = document.getElementById('cardSkills');
+      if (userProfile.skills) {
+        const skills = userProfile.skills.split(',').map(s => s.trim()).filter(s => s);
+        skillsContainer.innerHTML = skills.map(skill => 
+          `<span class="skill-tag">${skill}</span>`
+        ).join('');
+      } else {
+        skillsContainer.innerHTML = '<span class="skill-tag">No skills listed</span>';
+      }
+    }
+
+    // Form submission
+    function initializeFormSubmission() {
+      if (!form) {
+        console.error('Profile form not found');
+        return;
+      }
+      
+      form.onsubmit = async (e) => {
+      e.preventDefault();
+      
+      // Validate required fields
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      
+      if (!username || !email) {
+        showError('Please fill in all required fields (Username and Email)');
+        return;
+      }
+      
+      // Show loading state
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Saving...';
+      submitBtn.disabled = true;
+      
+      const data = {
+        username: username,
+        email: email,
+        phone: document.getElementById('phone').value.trim() || 'Not provided',
+        education: document.getElementById('education').value || 'Not specified',
+        occupation: document.getElementById('occupation').value.trim() || 'Professional',
+        experience: document.getElementById('experience').value || 'Not specified',
+        skills: document.getElementById('skills').value.trim(),
+        bio: document.getElementById('bio').value.trim() || 'No bio provided',
+        isAvailable: isAvailable,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      try {
+        // Upload profile image if selected
+        if (profileImage && typeof profileImage === 'object') {
+          const imageRef = ref(storage, `profiles/${currentUser.uid}/profile.jpg`);
+          await uploadBytes(imageRef, profileImage);
+          data.profileImageUrl = await getDownloadURL(imageRef);
+        }
+        
+        // Save profile to Firestore
+        const profileRef = doc(db, 'profiles', currentUser.uid);
+        await setDoc(profileRef, data, { merge: true });
+        
+        // Update user profile data
+        userProfile = data;
+        
+        console.log('Profile saved successfully, updating UI...');
+        
+        // Hide welcome message and form
+        const welcomeMsg = document.getElementById('newUserWelcome');
+        if (welcomeMsg) {
+          welcomeMsg.style.display = 'none';
+        }
+        if (form) {
+      form.classList.add('hidden');
+        }
+        
+        // Show profile card and tabs
+        if (card) {
+      card.classList.add('show');
+          card.classList.remove('hidden');
+        }
+        
+        const profileTabs = document.getElementById('profileTabs');
+        if (profileTabs) {
+          profileTabs.classList.remove('hidden');
+        }
+        
+        // Update the profile card with new data
+        updateProfileCard();
+        
+        // Load user's jobs and applications now that profile exists
+        try {
+          await loadUserJobs();
+          await loadUserApplications();
+        } catch (error) {
+          console.error('Error loading jobs/applications after profile creation:', error);
+        }
+        
+        // Show appropriate success message
+        if (userProfile && userProfile.username) {
+          showSuccess('Profile updated successfully!');
+        } else {
+          showSuccess('Profile created successfully! Welcome to WalkIn!');
+        }
+        
+        console.log('UI updated successfully after profile creation');
+        
+      } catch (error) {
+        console.error('Error saving profile:', error);
+        showError('Error saving profile. Please check your internet connection and try again.');
+      } finally {
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+      };
+    }
+    
+    // Initialize form submission when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeFormSubmission);
+    } else {
+      initializeFormSubmission();
+    }
+    
+    // Tab management
+    function initializeTabs() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetTab = btn.getAttribute('data-tab');
+          
+          // Update active tab button
+          tabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // Update active tab content
+          tabContents.forEach(content => content.classList.remove('active'));
+          const targetContent = document.getElementById(`${targetTab}-tab`);
+          if (targetContent) {
+            targetContent.classList.add('active');
+          }
+        });
+      });
+    }
+    
+    // Initialize tabs when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeTabs);
+    } else {
+      initializeTabs();
+    }
+
+    // Job posting functionality
+    function initializeJobForm() {
+      const jobForm = document.getElementById('jobForm');
+      if (!jobForm) {
+        console.error('Job form not found');
+        return;
+      }
+      
+      jobForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Validate required fields
+      const title = document.getElementById('jobTitle').value.trim();
+      const category = document.getElementById('jobCategory').value;
+      const price = parseInt(document.getElementById('jobPrice').value);
+      const description = document.getElementById('jobDescription').value.trim();
+      
+      if (!title || !category || !price || !description) {
+        showError('Please fill in all required fields for the job post');
+        return;
+      }
+      
+      if (!userProfile || !userProfile.username) {
+        showError('Please complete your profile first before posting jobs');
+        return;
+      }
+      
+      // Show loading state
+      const submitBtn = document.querySelector('#jobForm button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Posting...';
+      submitBtn.disabled = true;
+      
+      const jobData = {
+        title: title,
+        category: category,
+        price: price,
+        description: description,
+        providerUid: currentUser.uid,
+        providerName: userProfile.username,
+        status: 'open',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      try {
+        // Upload job image if selected
+        const jobImageFile = document.getElementById('jobImage').files[0];
+        if (jobImageFile) {
+          const imageRef = ref(storage, `jobs/${Date.now()}_${jobImageFile.name}`);
+          await uploadBytes(imageRef, jobImageFile);
+          jobData.imageUrl = await getDownloadURL(imageRef);
+        }
+        
+        // Save job to Firestore
+        const jobsRef = collection(db, 'jobs');
+        const docRef = await addDoc(jobsRef, jobData);
+        
+        // Clear form
+        document.getElementById('jobForm').reset();
+        
+        // Reload jobs
+        await loadUserJobs();
+        
+        showSuccess('Job posted successfully! It will now be visible to all users in the Explore page.');
+        
+      } catch (error) {
+        console.error('Error posting job:', error);
+        showError('Error posting job. Please check your internet connection and try again.');
+      } finally {
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+      });
+    }
+    
+    // Initialize job form when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeJobForm);
+    } else {
+      initializeJobForm();
+    }
+
+    // Load user's posted jobs
+    async function loadUserJobs() {
+      try {
+        if (!currentUser) {
+          console.error('No current user for loading jobs');
+          return;
+        }
+        
+        const jobsQuery = query(
+          collection(db, 'jobs'),
+          where('providerUid', '==', currentUser.uid),
+          orderBy('createdAt', 'desc')
+        );
+        const jobsSnap = await getDocs(jobsQuery);
+        
+        const postedJobsList = document.getElementById('postedJobsList');
+        if (!postedJobsList) {
+          console.error('Posted jobs list element not found');
+          return;
+        }
+        
+        postedJobsList.innerHTML = '';
+        
+        if (jobsSnap.empty) {
+          postedJobsList.innerHTML = '<div class="empty-state">No jobs posted yet</div>';
+          return;
+        }
+        
+        jobsSnap.forEach(doc => {
+          const job = { id: doc.id, ...doc.data() };
+          const jobCard = createJobCard(job, true); // true for provider view
+          postedJobsList.appendChild(jobCard);
+        });
+        
+      } catch (error) {
+        console.error('Error loading jobs:', error);
+        const postedJobsList = document.getElementById('postedJobsList');
+        if (postedJobsList) {
+          postedJobsList.innerHTML = '<div class="empty-state">Error loading jobs. Please refresh the page.</div>';
+        }
+      }
+    }
+
+    // Load user's applications
+    async function loadUserApplications() {
+      try {
+        const applicationsQuery = query(
+          collection(db, 'applications'),
+          where('applicantUid', '==', currentUser.uid),
+          orderBy('createdAt', 'desc')
+        );
+        const applicationsSnap = await getDocs(applicationsQuery);
+        
+        const appliedJobsList = document.getElementById('appliedJobsList');
+        appliedJobsList.innerHTML = '';
+        
+        if (applicationsSnap.empty) {
+          appliedJobsList.innerHTML = '<div class="empty-state">No applications yet</div>';
+          return;
+        }
+        
+        // Get job details for each application
+        for (const appDoc of applicationsSnap.docs) {
+          const application = { id: appDoc.id, ...appDoc.data() };
+          const jobRef = doc(db, 'jobs', application.jobId);
+          const jobSnap = await getDoc(jobRef);
+          
+          if (jobSnap.exists()) {
+            const job = { id: jobSnap.id, ...jobSnap.data() };
+            const applicationCard = createApplicationCard(job, application);
+            appliedJobsList.appendChild(applicationCard);
+          }
+        }
+        
+      } catch (error) {
+        console.error('Error loading applications:', error);
+      }
+    }
+
+    // Create job card for provider view
+    function createJobCard(job, isProviderView = false) {
+      const card = document.createElement('div');
+      card.className = 'job-card';
+      
+      const statusBadge = job.status === 'open' ? 
+        '<span class="application-status status-pending">Open</span>' :
+        '<span class="application-status status-accepted">Completed</span>';
+      
+      card.innerHTML = `
+        <div class="job-header">
+          <div>
+            <span class="job-category">${job.category}</span>
+            <h3 class="job-title">${job.title}</h3>
+          </div>
+          <div class="job-price">₹${job.price}</div>
+        </div>
+        <p class="job-description">${job.description}</p>
+        ${job.imageUrl ? `<img src="${job.imageUrl}" alt="Job image" class="job-image">` : ''}
+        <div class="job-actions">
+          ${statusBadge}
+          ${job.status === 'open' ? `
+            <button class="btn btn-small btn-success" onclick="markJobCompleted('${job.id}')">Mark Complete</button>
+          ` : ''}
+        </div>
+        <div class="applicants-section" id="applicants-${job.id}">
+          <h4>Applicants (0)</h4>
+          <div class="applicants-list"></div>
+        </div>
+      `;
+      
+      // Load applicants for this job
+      if (isProviderView && job.status === 'open') {
+        loadJobApplicants(job.id);
+      }
+      
+      return card;
+    }
+
+    // Create application card for applicant view
+    function createApplicationCard(job, application) {
+      const card = document.createElement('div');
+      card.className = 'job-card';
+      
+      const statusClass = `status-${application.status}`;
+      const statusText = application.status.charAt(0).toUpperCase() + application.status.slice(1);
+      
+      card.innerHTML = `
+        <div class="job-header">
+          <div>
+            <span class="job-category">${job.category}</span>
+            <h3 class="job-title">${job.title}</h3>
+          </div>
+          <div class="job-price">₹${job.price}</div>
+        </div>
+        <p class="job-description">${job.description}</p>
+        ${job.imageUrl ? `<img src="${job.imageUrl}" alt="Job image" class="job-image">` : ''}
+        <div class="job-actions">
+          <span class="application-status ${statusClass}">${statusText}</span>
+          <p style="margin-top:10px;font-size:14px;color:var(--muted);">
+            Applied on ${application.createdAt.toDate().toLocaleDateString()}
+          </p>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    // Load applicants for a specific job
+    async function loadJobApplicants(jobId) {
+      try {
+        const applicantsQuery = query(
+          collection(db, 'applications'),
+          where('jobId', '==', jobId)
+        );
+        const applicantsSnap = await getDocs(applicantsQuery);
+        
+        const applicantsSection = document.getElementById(`applicants-${jobId}`);
+        const applicantsList = applicantsSection.querySelector('.applicants-list');
+        const applicantsCount = applicantsSection.querySelector('h4');
+        
+        applicantsCount.textContent = `Applicants (${applicantsSnap.size})`;
+        
+        if (applicantsSnap.empty) {
+          applicantsList.innerHTML = '<div class="empty-state">No applicants yet</div>';
+          return;
+        }
+        
+        applicantsList.innerHTML = '';
+        
+        for (const appDoc of applicantsSnap.docs) {
+          const application = { id: appDoc.id, ...appDoc.data() };
+          const profileRef = doc(db, 'profiles', application.applicantUid);
+          const profileSnap = await getDoc(profileRef);
+          
+          const applicantProfile = profileSnap.exists() ? profileSnap.data() : null;
+          
+          const applicantCard = document.createElement('div');
+          applicantCard.className = 'applicant-card';
+          
+          const statusClass = `status-${application.status}`;
+          const statusText = application.status.charAt(0).toUpperCase() + application.status.slice(1);
+          
+          applicantCard.innerHTML = `
+            <div class="applicant-header">
+              <div class="applicant-name">${applicantProfile?.username || 'Unknown User'}</div>
+              <span class="application-status ${statusClass}">${statusText}</span>
+            </div>
+            <p style="font-size:14px;color:var(--text-light);margin-bottom:10px;">
+              ${applicantProfile?.email || 'No email provided'}
+            </p>
+            ${application.docUrl ? `
+              <a href="${application.docUrl}" target="_blank" style="color:var(--primary);font-size:14px;">
+                📄 View CV/Document
+              </a>
+            ` : ''}
+            ${application.status === 'pending' ? `
+              <div style="margin-top:10px;">
+                <button class="btn btn-small btn-success" onclick="updateApplicationStatus('${application.id}', 'accepted')">
+                  Accept
+                </button>
+                <button class="btn btn-small btn-danger" onclick="updateApplicationStatus('${application.id}', 'rejected')">
+                  Reject
+                </button>
+              </div>
+            ` : ''}
+          `;
+          
+          applicantsList.appendChild(applicantCard);
+        }
+        
+      } catch (error) {
+        console.error('Error loading applicants:', error);
+      }
+    }
+
+    // Update application status
+    async function updateApplicationStatus(applicationId, status) {
+      try {
+        const applicationRef = doc(db, 'applications', applicationId);
+        await setDoc(applicationRef, { 
+          status: status,
+          updatedAt: new Date()
+        }, { merge: true });
+        
+        // Reload applications and jobs
+        await loadUserApplications();
+        await loadUserJobs();
+        
+        alert(`✅ Application ${status} successfully!`);
+        
+      } catch (error) {
+        console.error('Error updating application:', error);
+        alert('Error updating application. Please try again.');
+      }
+    }
+
+    // Mark job as completed
+    async function markJobCompleted(jobId) {
+      if (!confirm('Mark this job as completed? This will remove it from the explore feed.')) {
+        return;
+      }
+      
+      try {
+        const jobRef = doc(db, 'jobs', jobId);
+        await setDoc(jobRef, { 
+          status: 'completed',
+          updatedAt: new Date()
+        }, { merge: true });
+        
+        // Reload jobs
+        await loadUserJobs();
+        
+        alert('✅ Job marked as completed!');
+        
+      } catch (error) {
+        console.error('Error completing job:', error);
+        alert('Error completing job. Please try again.');
+      }
+    }
+    
+    // Edit profile
+    function editProfile() {
+      console.log('Editing profile for user:', userProfile?.username);
+      
+      // Hide profile card and tabs
+      if (card) {
+      card.classList.remove('show');
+        card.classList.add('hidden');
+      }
+      
+      const profileTabs = document.getElementById('profileTabs');
+      if (profileTabs) {
+        profileTabs.classList.add('hidden');
+      }
+      
+      // Show welcome message and form
+      const welcomeMsg = document.getElementById('newUserWelcome');
+      if (welcomeMsg) {
+        welcomeMsg.style.display = 'block';
+      }
+      
+      if (form) {
+      form.classList.remove('hidden');
+      }
+      
+      // Pre-fill form with existing data
+      if (userProfile) {
+        document.getElementById('username').value = userProfile.username || '';
+        document.getElementById('email').value = userProfile.email || '';
+        document.getElementById('phone').value = userProfile.phone || '';
+        document.getElementById('education').value = userProfile.education || '';
+        document.getElementById('occupation').value = userProfile.occupation || '';
+        document.getElementById('experience').value = userProfile.experience || '';
+        document.getElementById('skills').value = userProfile.skills || '';
+        document.getElementById('bio').value = userProfile.bio || '';
+        
+        // Update availability
+        isAvailable = userProfile.isAvailable || false;
+        if (availToggle) {
+          availToggle.classList.toggle('active', isAvailable);
+        }
+        if (availLabel) {
+          availLabel.textContent = isAvailable ? 'Currently Available' : 'Currently Unavailable';
+        }
+        
+        // Update profile image
+        if (userProfile.profileImageUrl) {
+          profileImage = userProfile.profileImageUrl;
+          if (imagePreview) {
+            imagePreview.innerHTML = `<img src="${profileImage}" alt="Profile">`;
+          }
+        }
+      }
+    }
+    
+    // Cancel edit
+    function cancelEdit() {
+      if (confirm('Discard changes?')) {
+        // Return to profile view
+        displayProfile();
+      }
+    }
+    
+    // Clear all cached data to prevent conflicts
+    function clearAllCache() {
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Clear any cached form data
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) {
+            caches.delete(name);
+          }
+        });
+      }
+    }
+    
+    // Reset all form fields to ensure clean state
+    function resetAllForms() {
+      // Reset profile form
+      if (form) {
+        form.reset();
+      }
+      
+      // Reset job form
+      const jobForm = document.getElementById('jobForm');
+      if (jobForm) {
+        jobForm.reset();
+      }
+      
+      // Reset image previews
+      if (imagePreview) {
+        imagePreview.innerHTML = '<span id="profileInitial">U</span>';
+      }
+      
+      // Reset availability toggle
+      isAvailable = false;
+      if (availToggle) {
+        availToggle.classList.remove('active');
+      }
+      if (availLabel) {
+        availLabel.textContent = 'Currently Unavailable';
+      }
+      
+      // Reset profile image
+      profileImage = null;
+      
+      // Reset user profile data
+      userProfile = null;
+      
+      // Hide all sections and show form
+      if (card) card.classList.add('hidden');
+      if (document.getElementById('profileTabs')) {
+        document.getElementById('profileTabs').classList.add('hidden');
+      }
+      if (form) form.classList.remove('hidden');
+      if (document.getElementById('newUserWelcome')) {
+        document.getElementById('newUserWelcome').style.display = 'block';
+      }
+    }
+    
+    // Debug function to check if everything is working
+    function debugCheck() {
+      console.log('=== WalkIn Profile Debug ===');
+      console.log('Form element:', form);
+      console.log('Card element:', card);
+      console.log('Profile tabs:', document.getElementById('profileTabs'));
+      console.log('New user welcome:', document.getElementById('newUserWelcome'));
+      console.log('Current user:', currentUser);
+      console.log('User profile:', userProfile);
+      console.log('========================');
+    }
+    
+    // Call functions on page load
+    clearAllCache();
+    
+    // Wait for elements to be initialized before debugging
+    setTimeout(() => {
+      debugCheck();
+    }, 100);
+  </script>
+</body>
+</html>

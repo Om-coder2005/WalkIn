@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WalkIn — Kolhapur Service Marketplace</title>
+    <style>
+      :root{
+        --primary:#6c574c;
+        --primary-light:#9e827a;
+        --accent:#4e6758;
+        --accent-light:#668673;
+        --bg:#fbf9f4;
+        --surface:#fefefe;
+        --text:#30251f;
+        --text-light:#5e534f;
+        --muted:#8b7f75;
+        --muted-light:#dcd5d0;
+        --border:#c7bfba;
+        --border-light:#e5e0dc;
+        --shadow:0 1px 2px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.02);
+        --shadow-lg:0 5px 15px rgba(0,0,0,0.08);
+        --radius:10px;
+        --radius-lg:16px;
+        --radius-xl:24px;
+        --ease:cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; }
+      body {
+        font-family: 'Inter', sans-serif;
+        color: var(--text);
+        background: var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="4" height="4" fill="%23fbf9f4"/><circle cx="2" cy="2" r="0.5" fill="%23e8e2d7"/></svg>') repeat;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 15px;
+      }
+      .hand-drawn {
+        font-family: 'Caveat', cursive;
+        font-weight: 700;
+      }
+      a { color: inherit; text-decoration: none; transition: all 0.2s var(--ease); }
+      button { font: inherit; transition: all 0.2s var(--ease); }
+      .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border-light);
+      }
+      .nav-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 72px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--primary);
+      }
+      .logo-icon { width: 32px; height: 32px; stroke: var(--primary); stroke-width: 2; fill: none; }
+      .nav-links { display: flex; gap: 32px; align-items: center; }
+      .nav-links a {
+        color: var(--muted);
+        font-weight: 500;
+        font-size: 15px;
+        padding: 8px 0;
+        position: relative;
+      }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s var(--ease);
+      }
+      .nav-links a:hover::after { width: 100%; }
+      .nav-right { display: flex; align-items: center; gap: 16px; }
+      .search { position: relative; }
+      .search input {
+        width: 300px;
+        max-width: 280px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 12px 44px 12px 16px;
+        outline: none;
+        background: var(--bg);
+        font-size: 14px;
+        color: var(--text);
+        transition: all 0.2s var(--ease);
+      }
+      .search input::placeholder { color: var(--muted-light); }
+      .search input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary), 0 0 0 5px rgba(122, 98, 90, 0.2);
+        transform: translateY(-1px);
+      }
+      .search-icon {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted-light);
+        width: 18px;
+        height: 18px;
+      }
+      .btn {
+        border: 2px solid var(--primary);
+        border-radius: 24px;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s var(--ease);
+        position: relative;
+        overflow: hidden;
+        background: none;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+      }
+      .btn-primary:hover {
+        background: var(--primary-light);
+        color: #fff;
+        border-color: var(--primary-light);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        border: 2px solid var(--border);
+      }
+      .btn-ghost:hover {
+        background: var(--border-light);
+        border-color: var(--primary-light);
+        color: var(--primary);
+      }
+      .profile { position: relative; display: none; align-items: center; gap: 12px; cursor: pointer; }
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+      }
+/* Styling for the dropdown itself, mimicking a drawn outline */
+.dropdown {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    background: var(--surface);
+    /* Using an SVG data URI for a wavy, hand-drawn border */
+    border: 2px solid transparent; 
+    border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%23c7bfba" stroke-width="2" fill="none" /></svg>') 1;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    min-width: 200px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    animation: dropdownFade 0.2s var(--ease);
+}
+
+/* Styles for individual menu items on hover */
+.dropdown a, .dropdown button {
+    padding: 14px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-weight: 500;
+    transition: all 0.2s var(--ease);
+}
+
+.dropdown a:hover, .dropdown button:hover {
+    /* Subtle background change to mimic an "ink smudge" */
+    background: rgba(108, 87, 76, 0.05); 
+    color: var(--primary);
+}
+/* Custom styling for the dropdown menu */
+select {
+  /* Remove default browser styles for consistency */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Set width, padding, border, and background color */
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 13px;
+  margin-top: 4px;
+  transition: all 0.2s var(--ease);
+  /* Use an SVG data URI for a custom, hand-drawn arrow icon */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%238b7f75" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+/* Animate a hand-drawn border when the dropdown is focused */
+select:focus {
+  outline: none;
+  border: 2px solid transparent;
+  /* Apply an SVG border image to mimic a hand-drawn line */
+  border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M5,5 Q50,0 95,5 Q100,50 95,95 Q50,100 5,95 Q0,50 5,5" stroke="%237a625a" stroke-width="2" fill="none" /></svg>') 1;
+}
+
+/* Style the container for the dropdown within the profile menu */
+.dropdown-separator {
+    padding: 12px 16px;
+    /* Use a dashed border to maintain the sketchbook feel */
+    border-top: 1px dashed var(--border-light);
+}
+      .menu-toggle { display: none; }
+      .menu-toggle button {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--muted);
+        padding: 8px;
+        border-radius: var(--radius);
+      }
+      .menu-toggle button:hover {
+        background: var(--border-light);
+        color: var(--text);
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(135deg, var(--bg) 0%, var(--border-light) 100%);
+        position: relative;
+        overflow: hidden;
+        border-bottom: 2px dashed var(--border);
+      }
+      .hero-wrap {
+        padding: 100px 0 120px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .hero-title-wrap {
+          display: inline-block;
+          position: relative;
+          margin-bottom: 20px;
+      }
+      .hero-title-wrap h1 {
+          font-size: 4rem;
+          font-weight: 800;
+          color: var(--text);
+          margin: 0;
+          position: relative;
+          z-index: 2;
+      }
+
+.scribble {
+    position: absolute;
+    bottom: -15px; /* Position it below the text */
+    left: 50%;
+    transform: translateX(-50%); /* Center the underline */
+    width: 100%;
+    height: 30px; /* Adjust height for the new path */
+    stroke: var(--primary);
+    stroke-width: 2px;
+    fill: none;
+    z-index: 1;
+    stroke-dasharray: 600; /* Adjusted dash array for the new path */
+    stroke-dashoffset: 600;
+    animation: drawScribble 2s forwards 0.5s; /* Slightly longer animation to emphasize the signature effect */
+}
+
+@keyframes drawScribble {
+    to { stroke-dashoffset: 0; }
+}
+      .hero p {
+        max-width: 600px;
+        margin: 0 auto 40px;
+        color: var(--text-light);
+        font-size: 18px;
+        line-height: 1.7;
+        position: relative;
+      }
+      .hero p::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 2px;
+        width: 0;
+        background: var(--muted-light);
+        transition: width 0.5s var(--ease);
+      }
+      .hero:hover p::after { width: 100%; }
+      .hero-actions {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* Cards */
+      .section-title {
+        text-align: center;
+        margin: 60px 0 20px;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+        margin: 40px 0 80px;
+      }
+      .card {
+        background: var(--surface);
+        border: 2px solid transparent;
+        border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%23c7bfba" stroke-width="2" fill="none" /></svg>') 1;
+        border-radius: var(--radius-xl);
+        padding: 24px;
+        box-shadow: none;
+        transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+        position: relative;
+        overflow: hidden;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%237a625a" stroke-width="2" fill="none" /></svg>') 1;
+      }
+      .card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(108, 87, 76, 0.03);
+        opacity: 0;
+        transition: opacity 0.3s var(--ease);
+        pointer-events: none;
+      }
+      .card:hover::before { opacity: 1; }
+      .badge {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        background: none;
+        border: 1px dashed var(--muted);
+        color: var(--muted);
+        padding: 6px 12px;
+        border-radius: 4px;
+        text-transform: capitalize;
+        letter-spacing: normal;
+        font-family: 'Inter', sans-serif;
+      }
+      .card h3 {
+        margin: 16px 0 8px;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .card p {
+        color: var(--text-light);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .price {
+        margin-top: 16px;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 1.1rem;
+      }
+      .empty {
+        grid-column: 1/-1;
+        text-align: center;
+        color: var(--muted-light);
+        padding: 60px 20px;
+        font-size: 16px;
+      }
+      .scratched-out {
+          text-decoration: none;
+          transition: text-decoration 0.3s var(--ease);
+      }
+      .scratched-out:hover {
+          text-decoration: line-through;
+          text-decoration-color: var(--text);
+          text-decoration-thickness: 1px;
+      }
+  .backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  z-index: 9998; /* ensure backdrop is above hero */
+}
+
+
+      .backdrop.show {
+        display: flex;
+        animation: backdropFade 0.3s var(--ease);
+      }
+      @keyframes backdropFade {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+     @keyframes modalSlide {
+  from { opacity: 0; transform: translate(-50%, calc(-50% - 20px)) scale(0.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border-light);
+      }
+      /* Backdrop behind modal but above page */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  z-index: 9998; /* higher than hero */
+}
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 420px;
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        animation: modalSlide 0.3s var(--ease);
+        z-index: 9999;
+      }
+
+      .modal-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .modal-body { padding: 24px; }
+      .tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--border-light);
+        border-radius: var(--radius);
+        padding: 4px;
+        margin-bottom: 20px;
+      }
+      .tab {
+        flex: 1;
+        background: none;
+        border: none;
+        padding: 12px;
+        border-radius: calc(var(--radius) - 2px);
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s var(--ease);
+      }
+      .tab[aria-selected="true"] {
+        background: var(--surface);
+        color: var(--text);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      }
+      .form { display: none; }
+      .form.active { display: block; }
+      .field { margin: 16px 0; }
+      .field label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      input[type="text"], input[type="email"], input[type="password"] {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        font-size: 14px;
+        transition: all 0.2s var(--ease);
+      }
+      input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 2px var(--primary-light), 0 0 0 5px rgba(122, 98, 90, 0.2);
+      }
+      .form-actions { margin-top: 20px; }
+      .btn-wide { width: 100%; }
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 13px;
+        margin-top: 4px;
+      }
+      footer {
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        padding: 40px 0;
+        text-align: center;
+        color: var(--muted);
+      }
+      .badge-sketch {
+          background: none;
+          border: 1px dashed var(--muted);
+          color: var(--muted);
+          padding: 6px 12px;
+          border-radius: 4px;
+          text-transform: capitalize;
+          letter-spacing: normal;
+          font-weight: 600;
+      }
+      @media (max-width: 960px) {
+        .hero h1 { font-size: 2.8rem; }
+        .hero-wrap { padding: 80px 0 100px; }
+      }
+      @media (max-width: 640px) {
+        .nav-links { display: none; }
+        .menu-toggle { display: block; }
+        .search input { width: 200px; }
+        .hero h1 { font-size: 2.2rem; }
+        .hero p { font-size: 16px; }
+        .hero-wrap { padding: 60px 0 80px; }
+        .container { padding: 0 16px; }
+        .section-title { margin: 40px 0 16px; }
+        .cards { margin: 24px 0 60px; }
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="container nav-wrap">
+            <a class="logo" href="#">
+                <!-- <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 14.88V16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1.12"></path>
+                    <path d="M12 21v-4"></path>
+                    <path d="M12 3v9"></path>
+                    <path d="M12 9l-3 3"></path>
+                    <path d="M12 9l3 3"></path>
+                    <path d="M12 17l-3 3"></path>
+                    <path d="M12 17l3 3"></path>
+                </svg> -->
+                <span class="hand-drawn">WalkIn</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="home.html" data-i18n="nav_home">Home</a>
+                <a href="explore.html" data-i18n="nav_explore">Explore</a>
+                <a href="profile.html" data-i18n="nav_profile">Profile</a>
+            </div>
+            <div class="nav-right">
+                <div class="search">
+                    <input id="searchInput" type="text" placeholder="Search services…"/>
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <button class="btn btn-primary" id="authTrigger">Login / Signup</button>
+                <div class="profile" id="profileBox">
+                    <div class="avatar">K</div>
+                    <strong id="profileName">User</strong>
+                    <div class="dropdown" id="profileMenu">
+                        <a href="profile.html">Profile</a>
+                        <a href="explore.html">Explore</a>
+                        <div class="dropdown-separator">
+                            <label for="languageSelect">Language</label>
+                            <select id="languageSelect">
+                                <option value="en">English</option>
+                                <option value="hi">हिन्दी (Hindi)</option>
+                                <option value="mr">मराठी (Marathi)</option>
+                            </select>
+                        </div>
+                        <button id="logoutBtn">Logout</button>
+                    </div>
+                </div>
+                <div class="menu-toggle">
+                    <button id="menuToggle">☰</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <header class="hero">
+        <div class="container hero-wrap">
+            <div class="hero-title-wrap">
+                <h1 class="hand-drawn">WalkIn</h1>
+ <svg class="scribble" viewBox="0 0 200 30" preserveAspectRatio="none">
+                <path d="M5,25 Q25,5 50,15 T100,25 T150,15 T195,25" />     
+        </div>
+            <p data-i18n="hero_subtitle">Connecting Kolhapur's local talent with seekers in one hub.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="explore.html" data-i18n="hero_explore">Explore services</a>
+                <a class="btn btn-ghost" id="authTriggerHero" data-i18n="hero_join">Join WalkIn</a>
+            </div>
+        </div>
+    </header>
+    <main class="container" id="mainContent">
+        <section id="explore">
+            <h2 class="section-title hand-drawn" data-i18n="browse_title">Browse Services</h2>
+            <div class="cards" id="jobCards"></div>
+        </section>
+    </main>
+    <footer id="contact">
+        <div class="container" data-i18n="footer">© 2025 WalkIn · Built in Kolhapur</div>
+    </footer>
+    <div class="backdrop" id="authBackdrop">
+        <div class="modal" id="authModal">
+            <div class="modal-header">
+                <h3 class="modal-title hand-drawn">Welcome to WalkIn</h3>
+                <button id="authClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab" id="tab-login" aria-selected="true">Log in</button>
+                    <button class="tab" id="tab-signup" aria-selected="false">Sign up</button>
+                </div>
+                <form class="form active" id="panel-login">
+                    <div class="field">
+                        <label>Email</label>
+                        <input id="loginEmail" type="email"/>
+                    </div>
+                    <div class="field">
+                        <label>Password</label>
+                        <input id="loginPassword" type="password"/>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-wide">Log in</button>
+                    </div>
+                </form>
+                <form class="form" id="panel-signup">
+                    <div class="field">
+                        <label>Username</label>
+                        <input id="signupName" type="text"/>
+                    </div>
+                    <div class="field">
+                        <label>Email</label>
+                        <input id="signupEmail" type="email"/>
+                    </div>
+                    <div class="field">
+                        <label>Password</label>
+                        <input id="signupPassword" type="password"/>
+                    </div>
+                    <div class="form-actions">
+                        <button id="sign_submit" type="submit" class="btn btn-primary btn-wide">Create account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        const firebaseConfig = { apiKey: "AIzaSyAOzsToiVP9BsevCDOjF54w341zIJghm_Y", authDomain: "walkin-3c91d.firebaseapp.com", projectId: "walkin-3c91d", storageBucket: "walkin-3c91d.firebasestorage.app", messagingSenderId: "145040800467", appId: "1:145040800467:web:3075cc56710dd5eaef7226", measurementId: "G-1EK3FBEBH7" };
+        const app = initializeApp(firebaseConfig);
+        getAnalytics(app);
+        const auth = getAuth(app);
+        const qs = s => document.querySelector(s);
+        const qsa = s => document.querySelectorAll(s);
+        const profileBox = qs("#profileBox"), profileMenu = qs("#profileMenu"), profileName = qs("#profileName"), logoutBtn = qs("#logoutBtn");
+        const tabs = qsa('.tab'), forms = qsa('.form');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.id.replace('tab-', 'panel-');
+                tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+                forms.forEach(f => f.classList.remove('active'));
+                tab.setAttribute('aria-selected', 'true');
+                qs(`#${target}`).classList.add('active');
+            });
+        });
+        qs("#sign_submit").addEventListener("click", e => {
+            e.preventDefault();
+            const email = qs("#signupEmail").value.trim(), pw = qs("#signupPassword").value.trim();
+            createUserWithEmailAndPassword(auth, email, pw).then(u => { alert("✅ Account created: " + u.user.email); closeAuth(); }).catch(err => alert(err.message));
+        });
+        qs("#panel-login").addEventListener("submit", e => {
+            e.preventDefault();
+            const email = qs("#loginEmail").value.trim(), pw = qs("#loginPassword").value.trim();
+            signInWithEmailAndPassword(auth, email, pw).then(u => { alert("✅ Logged in: " + u.user.email); closeAuth(); }).catch(err => alert(err.message));
+        });
+        logoutBtn.addEventListener("click", () => signOut(auth).then(() => alert("👋 Logged out")));
+        onAuthStateChanged(auth, user => {
+            const authTrigger = qs("#authTrigger");
+            if (user) {
+                authTrigger.style.display = "none";
+                profileBox.style.display = "flex";
+                profileName.textContent = user.email.split("@")[0];
+                qs(".avatar").textContent = user.email[0].toUpperCase();
+                
+                // Clear any cached data when user logs in
+                localStorage.clear();
+                sessionStorage.clear();
+            } else {
+                authTrigger.style.display = "inline-block";
+                profileBox.style.display = "none";
+            }
+        });
+        profileBox.addEventListener("click", (e) => {
+            if (e.target.closest("#languageSelect")) return;
+            const open = profileMenu.style.display === "flex";
+            profileMenu.style.display = open ? "none" : "flex";
+            profileBox.setAttribute("aria-expanded", String(!open));
+        });
+        const translations = {
+            en: {
+                nav_home: "Home",
+                nav_explore: "Explore",
+                nav_profile: "Profile",
+                hero_subtitle: "Connecting Kolhapur's local talent with seekers in one hub.",
+                hero_explore: "Explore services",
+                hero_join: "Join WalkIn",
+                browse_title: "Browse Services",
+                footer: "© 2025 WalkIn · Built in Kolhapur"
+            },
+            hi: {
+                nav_home: "होम",
+                nav_explore: "खोजें",
+                nav_profile: "प्रोफ़ाइल",
+                hero_title: "वॉकइन",
+                hero_subtitle: "कोल्हापुर की स्थानीय प्रतिभा को खोजने वालों से जोड़ना।",
+                hero_explore: "सेवाएं देखें",
+                hero_join: "वॉकइन से जुड़ें",
+                browse_title: "सेवाएं ब्राउज़ करें",
+                footer: "© 2025 वॉकइन · कोल्हापुर में निर्मित"
+            },
+            mr: {
+                nav_home: "मुख्यपृष्ठ",
+                nav_explore: "एक्सप्लोर",
+                nav_profile: "प्रोफाइल",
+                hero_title: "वॉकइन",
+                hero_subtitle: "कोल्हापूरची स्थानिक कला व कौशल्य शोधणाऱ्यांना जोडणारे एक व्यासपीठ.",
+                hero_explore: "सेवा पहा",
+                hero_join: "वॉकइन मध्ये सामील व्हा",
+                browse_title: "सेवा ब्राउज करा",
+                footer: "© 2025 वॉकइन · कोल्हापुरमध्ये तयार केले"
+            }
+        };
+        function translateUI(lang) {
+            const t = translations[lang] || translations.en;
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.getAttribute("data-i18n");
+                if (t[key]) el.textContent = t[key];
+            });
+        }
+        const languageSelect = document.getElementById("languageSelect");
+        const savedLang = localStorage.getItem("WalkIn-lang") || "en";
+        languageSelect.value = savedLang;
+        translateUI(savedLang);
+        languageSelect.addEventListener("change", () => {
+            const selected = languageSelect.value;
+            localStorage.setItem("WalkIn-lang", selected);
+            translateUI(selected);
+        });
+        const backdrop = qs("#authBackdrop"), modal = qs("#authModal"), closeBtn = qs("#authClose");
+        function openAuth(v = "login") { backdrop.classList.add("show"); }
+        function closeAuth() { backdrop.classList.remove("show"); }
+// Open auth modal only if user is not logged in
+qs("#authTrigger").onclick = () => {
+  if (!auth.currentUser) openAuth("login");
+};
+
+const heroTrigger = qs("#authTriggerHero");
+if (heroTrigger) {
+  heroTrigger.onclick = () => {
+    if (!auth.currentUser) openAuth("login");
+  };
+}
+
+        closeBtn.onclick = () => closeAuth();
+        backdrop.onclick = (e) => { if (e.target === backdrop) closeAuth(); }
+        const jobs = [
+            { category: "Plumbing", title: "Expert Plumber Available", description: "Professional plumbing services including leak repairs, pipe installation, and emergency fixes. 5+ years experience.", price: 500 },
+            { category: "Electronics", title: "AC Repair & Service", description: "Complete air conditioning repair, maintenance, and installation services. Quick response guaranteed.", price: 800 },
+            { category: "Home Services", title: "House Cleaning Service", description: "Professional deep cleaning services for homes and offices. Eco-friendly products used.", price: 350 },
+            { category: "Tutoring", title: "Mathematics Tutor", description: "Experienced math tutor for grades 8-12. Help with algebra, geometry, and exam preparation.", price: 400 },
+            { category: "Photography", title: "Event Photography", description: "Professional photography for weddings, parties, and corporate events. Portfolio available on request.", price: 2500 },
+            { category: "Repair", title: "Mobile Phone Repair", description: "Quick and reliable smartphone repairs. Screen replacement, battery change, and software issues.", price: 300 }
+        ];
+        const jobCards = qs("#jobCards");
+        function renderJobs(jobList) {
+            jobCards.innerHTML = '';
+            if (jobList.length === 0) {
+                jobCards.innerHTML = '<div class="empty">🔍 No services found matching your search</div>';
+                return;
+            }
+            jobList.forEach(j => {
+                const c = document.createElement("div");
+                c.className = "card";
+                c.innerHTML = `
+                    <span class="badge badge-sketch">${j.category}</span>
+                    <h3 class="scratched-out">${j.title}</h3>
+                    <p>${j.description}</p>
+                    <p class="price">₹${j.price}</p>
+                `;
+                jobCards.appendChild(c);
+            });
+        }
+        renderJobs(jobs);
+        const searchInput = qs("#searchInput");
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (query === '') {
+                renderJobs(jobs);
+            } else {
+                const filtered = jobs.filter(job =>
+                    job.title.toLowerCase().includes(query) ||
+                    job.description.toLowerCase().includes(query) ||
+                    job.category.toLowerCase().includes(query)
+                );
+                renderJobs(filtered);
+            }
+        });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        document.addEventListener('click', (e) => {
+            if (!profileBox.contains(e.target)) {
+                profileMenu.style.display = 'none';
+                profileBox.setAttribute("aria-expanded", "false");
+            }
+        });
+        function setFormLoading(formId, loading) {
+            const form = qs(formId);
+            const btn = form.querySelector('button[type="submit"], button[id$="submit"]');
+            if (loading) {
+                btn.textContent = 'Loading...';
+                btn.disabled = true;
+            } else {
+                btn.textContent = formId.includes('login') ? 'Log in' : 'Create account';
+                btn.disabled = false;
+            }
+        }
+    qs("#sign_submit").addEventListener("click", e => {
+    e.preventDefault();
+    const name = qs("#signupName").value.trim();
+    const email = qs("#signupEmail").value.trim();
+    const pw = qs("#signupPassword").value.trim();
+
+    if (!name || !email || !pw) {
+        alert("⚠️ Please fill all fields");
+        return;
+    }
+
+    if (pw.length < 6) {
+        alert("⚠️ Password must be at least 6 characters long");
+        return;
+    }
+
+    setFormLoading("#panel-signup", true);
+    createUserWithEmailAndPassword(auth, email, pw)
+        .then(u => {
+            alert("✅ Account created for " + email);
+            closeAuth();
+        })
+        .catch(err => {
+            if (err.code === "auth/email-already-in-use") {
+                alert("❌ This email is already registered. Try logging in instead.");
+            } else if (err.code === "auth/invalid-email") {
+                alert("❌ Please enter a valid email address.");
+            } else if (err.code === "auth/weak-password") {
+                alert("❌ Password is too weak. Use 6+ characters.");
+            } else {
+                alert("❌ " + err.message);
+            }
+        })
+        .finally(() => {
+            setFormLoading("#panel-signup", false);
+        });
+});
+
+        qs("#panel-login").addEventListener("submit", e => {
+            e.preventDefault();
+            const email = qs("#loginEmail").value.trim(), pw = qs("#loginPassword").value.trim();
+            if (!email || !pw) {
+                alert("Please fill all fields");
+                return;
+            }
+            setFormLoading("#panel-login", true);
+            signInWithEmailAndPassword(auth, email, pw)
+                .then(u => {
+                    alert("✅ Welcome back to WalkIn!");
+                    closeAuth();
+                })
+                .catch(err => {
+                    alert("❌ " + err.message);
+                })
+                .finally(() => {
+                    setFormLoading("#panel-login", false);
+                });
+        });
+    </script>
+</body>
+</html>

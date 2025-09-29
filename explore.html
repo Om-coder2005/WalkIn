@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>WalkIn — Explore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* SKETCHBOOK THEME COLORS & VARIABLES */
+        :root{
+            --primary:#6c574c;
+            --primary-light:#9e827a;
+            --accent:#4e6758;
+            --accent-light:#668673;
+            --bg:#fbf9f4;
+            --surface:#fefefe;
+            --text:#30251f;
+            --text-light:#5e534f;
+            --muted:#8b7f75;
+            --muted-light:#dcd5d0;
+            --border:#c7bfba;
+            --border-light:#e5e0dc;
+            --shadow:0 1px 2px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.02);
+            --shadow-lg:0 5px 15px rgba(0,0,0,0.08);
+            --shadow-xl:0 10px 30px rgba(0,0,0,0.15);
+            --radius:10px;
+            --radius-lg:16px;
+            --radius-xl:24px;
+            --ease:cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; min-height: 100vh; }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="4" height="4" fill="%23fbf9f4"/><circle cx="2" cy="2" r="0.5" fill="%23e8e2d7"/></svg>') repeat;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 15px;
+        }
+        .hand-drawn {
+            font-family: 'Caveat', cursive;
+            font-weight: 700;
+        }
+        a { color: inherit; text-decoration: none; transition: all 0.2s var(--ease); }
+        button { font: inherit; transition: all 0.2s var(--ease); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--surface);
+            border-bottom: 2px dashed var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        .logo {
+            font-family: 'Caveat', cursive;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--text-light);
+            position: relative;
+            padding: 8px 0;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s var(--ease);
+        }
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        .feed {
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Post Cards */
+        .post {
+            background: var(--surface);
+            border: 2px solid transparent; 
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%23c7bfba" stroke-width="2" fill="none" /></svg>') 1;
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+            position: relative;
+            overflow: hidden;
+        }
+        .post:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%237a625a" stroke-width="2" fill="none" /></svg>') 1;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.8rem;
+        }
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .user-info strong {
+            font-size: 1rem;
+            color: var(--text);
+        }
+        .user-info span {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        .post-content h3 {
+            margin: 0.3rem 0;
+            color: var(--accent);
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+        }
+        .post-content p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .post-image {
+            width: 100%;
+            border-radius: var(--radius);
+            margin: 0.5rem 0;
+            border: 1px solid var(--border);
+        }
+        .post-footer {
+            margin-top: 0.8rem;
+            text-align: right;
+        }
+
+        /* Buttons */
+        .apply-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s var(--ease);
+            border: 2px solid transparent; 
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M5,5 L95,5 L95,95 L5,95 Z" stroke="%236c574c" stroke-width="2" fill="none" /></svg>') 1;
+            box-shadow: 0 4px 10px rgba(108,87,76,0.3);
+        }
+        .apply-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(108,87,76,0.4);
+            background: var(--primary-light);
+        }
+        .modal button.cancel-btn {
+            background: var(--surface);
+            color: var(--muted);
+            border: 2px solid var(--border);
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect x="0" y="0" width="100" height="100" fill="none" stroke="%23c7bfba" stroke-dasharray="4 2" stroke-width="2"/></svg>') 1;
+            box-shadow: none;
+        }
+        .modal button.cancel-btn:hover {
+            background: var(--border-light);
+            color: var(--text);
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect x="0" y="0" width="100" height="100" fill="none" stroke="%239e827a" stroke-dasharray="4 2" stroke-width="2"/></svg>') 1;
+            transform: translateY(-1px);
+        }
+        .modal .apply-btn {
+            width: 100%;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            z-index: 9998;
+        }
+        .modal-backdrop.show {
+            display: flex;
+            animation: backdropFade 0.3s var(--ease);
+        }
+        @keyframes backdropFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal {
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%23c7bfba" stroke-width="2" fill="none" /></svg>') 1;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlide 0.3s var(--ease);
+            z-index: 9999;
+        }
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal h3 {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+        .modal .field {
+            margin-bottom: 1rem;
+        }
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            font-size: 14px;
+            transition: all 0.2s var(--ease);
+        }
+        .modal input:focus, .modal textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108,87,76,0.1);
+        }
+        .modal .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">WalkIn</div>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="explore.html" class="active">Explore</a>
+            <a href="profile.html">Profile</a>
+        </div>
+    </nav>
+
+    <div class="feed">
+        <div class="post">
+            <div class="post-header">
+                <div class="avatar">P</div>
+                <div class="user-info">
+                    <strong>Prakash Plumbing</strong> <br>
+                    <span>@plumber · 2h ago</span>
+                </div>
+            </div>
+            <div class="post-content">
+                <h3 class="hand-drawn">Leak Fix & Pipe Installation</h3>
+                <p>Available for urgent plumbing repairs in Rajarampuri. Affordable rates, quick response 🚰</p>
+                <img src="https://source.unsplash.com/700x400/?plumbing" class="post-image" alt="plumbing service">
+                <p><strong>₹500</strong> · Plumbing</p>
+            </div>
+            <div class="post-footer">
+                <button class="apply-btn" onclick="openApplyModal('Leak Fix & Pipe Installation')">Apply Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="applyModal">
+        <div class="modal">
+            <h3 class="hand-drawn">Apply for <span id="jobTitle"></span></h3>
+            <form id="applyForm">
+                <div class="field">
+                    <input type="text" id="applicantName" placeholder="Full Name" required>
+                </div>
+                <div class="field">
+                    <input type="email" id="applicantEmail" placeholder="Email" required>
+                </div>
+                <div class="field">
+                    <label>Upload CV/Document</label>
+                    <input type="file" id="applicantDoc" accept=".pdf,.doc,.docx" required>
+                </div>
+                <div class="modal form-actions">
+                    <button type="submit" class="apply-btn">Submit Application</button>
+                    <button type="button" class="cancel-btn" onclick="closeApplyModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <footer>
+        <p>This is the footer. Add copyright info here.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, orderBy, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAOzsToiVP9BsevCDOjF54w341zIJghm_Y",
+            authDomain: "walkin-3c91d.firebaseapp.com",
+            projectId: "walkin-3c91d",
+            storageBucket: "walkin-3c91d.firebasestorage.app",
+            messagingSenderId: "145040800467",
+            appId: "1:145040800467:web:3075cc56710dd5eaef7226",
+            measurementId: "G-1EK3FBEBH7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        let currentUser = null;
+        let currentJobId = null;
+
+        const modal = document.getElementById("applyModal");
+        const jobTitleEl = document.getElementById("jobTitle");
+        const form = document.getElementById("applyForm");
+
+        // Authentication state listener
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                loadJobs();
+            } else {
+                // Redirect to home if not authenticated
+                window.location.href = 'home.html';
+            }
+        });
+
+        // Load jobs from Firestore
+        async function loadJobs() {
+            try {
+                const jobsQuery = query(
+                    collection(db, 'jobs'),
+                    where('status', '==', 'open'),
+                    orderBy('createdAt', 'desc')
+                );
+                const jobsSnap = await getDocs(jobsQuery);
+                
+                const feed = document.querySelector('.feed');
+                if (!feed) {
+                    console.error('Feed element not found');
+                    return;
+                }
+                
+                feed.innerHTML = '';
+                
+                if (jobsSnap.empty) {
+                    feed.innerHTML = `
+                        <div class="post">
+                            <div style="text-align: center; padding: 40px; color: var(--muted);">
+                                <h3>No jobs available</h3>
+                                <p>Be the first to post a job!</p>
+                                <a href="profile.html" class="btn btn-primary" style="margin-top: 20px; display: inline-block;">Post a Job</a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                for (const jobDoc of jobsSnap.docs) {
+                    const job = { id: jobDoc.id, ...jobDoc.data() };
+                    const jobCard = createJobCard(job);
+                    feed.appendChild(jobCard);
+                }
+                
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                const feed = document.querySelector('.feed');
+                if (feed) {
+                    feed.innerHTML = `
+                        <div class="post">
+                            <div style="text-align: center; padding: 40px; color: #dc3545;">
+                                <h3>Error loading jobs</h3>
+                                <p>Please check your internet connection and refresh the page.</p>
+                                <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 20px;">Refresh Page</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Create job card
+        function createJobCard(job) {
+            const post = document.createElement('div');
+            post.className = 'post';
+            
+            const timeAgo = getTimeAgo(job.createdAt.toDate());
+            
+            post.innerHTML = `
+                <div class="post-header">
+                    <div class="avatar">${job.providerName ? job.providerName[0].toUpperCase() : 'U'}</div>
+                    <div class="user-info">
+                        <strong>${job.providerName || 'Unknown Provider'}</strong> <br>
+                        <span>@${job.category.toLowerCase()} · ${timeAgo}</span>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <h3 class="hand-drawn">${job.title}</h3>
+                    <p>${job.description}</p>
+                    ${job.imageUrl ? `<img src="${job.imageUrl}" class="post-image" alt="job image">` : ''}
+                    <p><strong>₹${job.price}</strong> · ${job.category}</p>
+                </div>
+                <div class="post-footer">
+                    <button class="apply-btn" onclick="openApplyModal('${job.id}', '${job.title}')">Apply Now</button>
+                </div>
+            `;
+            
+            return post;
+        }
+
+        // Get time ago string
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        }
+
+        function openApplyModal(jobId, title) {
+            currentJobId = jobId;
+            jobTitleEl.textContent = title;
+            modal.style.display = "flex";
+            
+            // Pre-fill form with user data if available
+            if (currentUser) {
+                loadUserProfile();
+            }
+        }
+
+        function closeApplyModal() {
+            modal.style.display = "none";
+            form.reset();
+            currentJobId = null;
+        }
+
+        // Load user profile for pre-filling form
+        async function loadUserProfile() {
+            try {
+                const profileRef = doc(db, 'profiles', currentUser.uid);
+                const profileSnap = await getDoc(profileRef);
+                
+                if (profileSnap.exists()) {
+                    const profile = profileSnap.data();
+                    document.getElementById('applicantName').value = profile.username || '';
+                    document.getElementById('applicantEmail').value = profile.email || '';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        // Application form submission
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('applicantName').value;
+            const email = document.getElementById('applicantEmail').value;
+            const docFile = document.getElementById('applicantDoc').files[0];
+            
+            if (!name || !email || !docFile) {
+                alert('Please fill all fields and upload a document');
+                return;
+            }
+            
+            try {
+                // Upload CV/Document
+                const docRef = ref(storage, `applications/${Date.now()}_${docFile.name}`);
+                await uploadBytes(docRef, docFile);
+                const docUrl = await getDownloadURL(docRef);
+                
+                // Get job details
+                const jobRef = doc(db, 'jobs', currentJobId);
+                const jobSnap = await getDoc(jobRef);
+                const job = jobSnap.data();
+                
+                // Save application to Firestore
+                const applicationData = {
+                    jobId: currentJobId,
+                    applicantUid: currentUser.uid,
+                    applicantName: name,
+                    applicantEmail: email,
+                    providerUid: job.providerUid,
+                    status: 'pending',
+                    docUrl: docUrl,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                
+                await addDoc(collection(db, 'applications'), applicationData);
+                
+                alert("✅ Application submitted successfully!");
+                closeApplyModal();
+                
+            } catch (error) {
+                console.error('Error submitting application:', error);
+                alert('Error submitting application. Please try again.');
+            }
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeApplyModal();
+            }
+        });
+    </script>
+</body>
+</html>
