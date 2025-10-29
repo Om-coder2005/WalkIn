@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>WalkIn — Explore</title>
+    <title>WalkIn – Explore</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -49,7 +49,7 @@
         button { font: inherit; transition: all 0.2s var(--ease); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-        /* Navigation */
+        /* --- NAVIGATION --- */
         nav {
             position: sticky;
             top: 0;
@@ -57,9 +57,9 @@
             background: var(--surface);
             border-bottom: 2px dashed var(--border-light);
             display: flex;
-            justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
+            flex-wrap: wrap; 
         }
         .logo {
             font-family: 'Caveat', cursive;
@@ -70,6 +70,7 @@
         .nav-links {
             display: flex;
             gap: 24px;
+            margin-left: 20px;
         }
         .nav-links a {
             text-decoration: none;
@@ -96,114 +97,213 @@
         .nav-links a.active::after {
             width: 100%;
         }
-        .feed {
-            max-width: 700px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+        
+        /* Search Bar in Navbar */
+        .search-bar { 
+            position: relative; 
+            margin-left: auto; 
+        }
+        .search-bar input {
+            width: 250px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 10px 40px 10px 15px;
+            outline: none;
+            background: var(--bg);
+            font-size: 14px;
+            color: var(--text);
+            transition: all 0.2s var(--ease);
+        }
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary), 0 0 0 5px rgba(122, 98, 90, 0.2);
+        }
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-light);
+            width: 18px;
+            height: 18px;
         }
 
-        /* Post Cards */
-        .post {
+        /* --- HORIZONTAL FILTER BAR --- */
+        .filter-bar {
             background: var(--surface);
-            border: 2px solid transparent; 
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%23c7bfba" stroke-width="2" fill="none" /></svg>') 1;
+            padding: 15px 24px;
+            border-bottom: 1px solid var(--border-light);
+            margin: 40px auto 0; 
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0; 
+            box-shadow: var(--shadow);
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .filter-group label {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg);
+            font-size: 14px;
+        }
+        .reset-btn {
+            background: var(--border-light);
+            color: var(--muted);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .reset-btn:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        /* --- MAIN CONTENT & CARDS --- */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 40px; 
+            background: var(--surface);
+            box-shadow: var(--shadow-lg);
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl); 
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            padding: 30px 0; 
+        }
+        .card {
+            background: var(--surface);
+            border: 2px solid var(--border);
             border-radius: var(--radius-xl);
             padding: 24px;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+            box-shadow: none;
+            transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
-        .post:hover {
+        .card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%237a625a" stroke-width="2" fill="none" /></svg>') 1;
+            border-color: var(--primary);
+            cursor: pointer;
         }
-        .post-header {
+        .card-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
         }
         .avatar {
-            width: 48px;
-            height: 48px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: var(--primary);
+            background: var(--accent);
             color: #fff;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 16px;
+            overflow: hidden;
+            flex-shrink: 0;
         }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
         .user-info strong {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--text);
+            display: block;
+            line-height: 1.2;
         }
         .user-info span {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-light);
+            display: block;
         }
-        .post-content h3 {
-            margin: 0.3rem 0;
+        .badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(78,103,88,0.1);
+            border: 1px dashed var(--accent);
             color: var(--accent);
-            font-family: 'Caveat', cursive;
-            font-size: 1.5rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: capitalize;
+            margin-bottom: 12px;
         }
-        .post-content p {
-            font-size: 0.95rem;
-            line-height: 1.5;
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
         }
-        .post-image {
+        .card p {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.6;
+            flex-grow: 1; 
+        }
+        .card-image {
             width: 100%;
+            max-height: 150px;
+            object-fit: cover;
             border-radius: var(--radius);
-            margin: 0.5rem 0;
-            border: 1px solid var(--border);
+            margin: 10px 0;
+            border: 1px solid var(--border-light);
         }
-        .post-footer {
-            margin-top: 0.8rem;
-            text-align: right;
+        .price-row {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        /* Buttons */
+        .price {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
         .apply-btn {
             background: var(--primary);
             color: #fff;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: var(--radius-lg);
             cursor: pointer;
             font-weight: 600;
             transition: all 0.2s var(--ease);
-            border: 2px solid transparent; 
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M5,5 L95,5 L95,95 L5,95 Z" stroke="%236c574c" stroke-width="2" fill="none" /></svg>') 1;
-            box-shadow: 0 4px 10px rgba(108,87,76,0.3);
+            font-size: 14px; 
         }
         .apply-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 15px rgba(108,87,76,0.4);
             background: var(--primary-light);
         }
-        .modal button.cancel-btn {
-            background: var(--surface);
-            color: var(--muted);
-            border: 2px solid var(--border);
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect x="0" y="0" width="100" height="100" fill="none" stroke="%23c7bfba" stroke-dasharray="4 2" stroke-width="2"/></svg>') 1;
-            box-shadow: none;
+        .apply-btn-card { 
+            padding: 8px 16px;
         }
-        .modal button.cancel-btn:hover {
-            background: var(--border-light);
-            color: var(--text);
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect x="0" y="0" width="100" height="100" fill="none" stroke="%239e827a" stroke-dasharray="4 2" stroke-width="2"/></svg>') 1;
-            transform: translateY(-1px);
-        }
-        .modal .apply-btn {
-            width: 100%;
-        }
-
-        /* Modal */
+        /* --- Modal Styling --- */
         .modal-backdrop {
             position: fixed;
             inset: 0;
@@ -218,65 +318,118 @@
         }
         .modal-backdrop.show {
             display: flex;
-            animation: backdropFade 0.3s var(--ease);
-        }
-        @keyframes backdropFade {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
         .modal {
-            background: var(--bg);
-            border: 2px solid transparent;
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path d="M10,10 Q50,0 90,10 Q100,50 90,90 Q50,100 10,90 Q0,50 10,10" stroke="%23c7bfba" stroke-width="2" fill="none" /></svg>') 1;
+            background: var(--surface);
+            border: 2px solid var(--border); 
             border-radius: var(--radius-xl);
-            padding: 2rem;
-            max-width: 400px;
+            padding: 30px; 
+            max-width: 450px; 
             width: 100%;
-            box-shadow: var(--shadow-lg);
-            animation: modalSlide 0.3s var(--ease);
+            box-shadow: var(--shadow-xl); 
             z-index: 9999;
-        }
-        @keyframes modalSlide {
-            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
         }
         .modal h3 {
             font-family: 'Caveat', cursive;
-            font-size: 1.5rem;
-            color: var(--text);
-            margin-top: 0;
+            font-size: 2rem;
+            color: var(--primary);
             margin-bottom: 1.5rem;
+            text-align: center;
         }
         .modal .field {
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
-        .modal input, .modal textarea {
+        .modal .field label {
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-size: 15px;
+            display: block;
+        }
+        /* FIX: Added input[type="tel"] to apply consistent styling to the phone number input */
+        .modal input[type="text"], 
+        .modal input[type="email"],
+        .modal input[type="tel"], 
+        .modal textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            background: var(--surface);
-            font-size: 14px;
-            transition: all 0.2s var(--ease);
+            background: var(--bg);
+            font-size: 15px;
+            font-family: inherit;
         }
-        .modal input:focus, .modal textarea:focus {
+        .modal textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        /* FIX: Added input[type="tel"] to apply consistent focus styling */
+        .modal input:focus,
+        .modal input[type="tel"]:focus,
+        .modal textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(78,103,88,0.2);
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108,87,76,0.1);
         }
         .modal .form-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            margin-top: 1rem;
+            gap: 15px; 
+            margin-top: 25px; 
         }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-top: 2rem;
+        .modal .cancel-btn {
+            background: var(--border-light);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+        }
+        .modal .cancel-btn:hover {
+            background: var(--border);
+        }
+        .modal .apply-btn {
+            background: var(--accent);
+            padding: 10px 20px;
+        }
+        .modal .apply-btn:hover {
+            background: var(--accent-light);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .filter-bar {
+                margin: 20px auto 0;
+                border-radius: var(--radius);
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .filter-group select {
+                width: 100%;
+            }
+            .main-content {
+                padding: 0 24px 40px;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: space-around;
+                border-top: 1px dashed var(--border-light);
+                padding-top: 10px;
+                margin-top: 10px;
+                margin-left: 0;
+            }
+            .search-bar {
+                order: 2;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 10px;
+            }
         }
     </style>
 </head>
@@ -287,278 +440,397 @@
             <a href="home.html">Home</a>
             <a href="explore.html" class="active">Explore</a>
             <a href="profile.html">Profile</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="search-bar">
+            <input id="searchInput" type="text" placeholder="Search titles, skills, or categories..."/>
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
         </div>
     </nav>
 
-    <div class="feed">
-        <div class="post">
-            <div class="post-header">
-                <div class="avatar">P</div>
-                <div class="user-info">
-                    <strong>Prakash Plumbing</strong> <br>
-                    <span>@plumber · 2h ago</span>
-                </div>
-            </div>
-            <div class="post-content">
-                <h3 class="hand-drawn">Leak Fix & Pipe Installation</h3>
-                <p>Available for urgent plumbing repairs in Rajarampuri. Affordable rates, quick response 🚰</p>
-                <img src="https://source.unsplash.com/700x400/?plumbing" class="post-image" alt="plumbing service">
-                <p><strong>₹500</strong> · Plumbing</p>
-            </div>
-            <div class="post-footer">
-                <button class="apply-btn" onclick="openApplyModal('Leak Fix & Pipe Installation')">Apply Now</button>
+    <div class="filter-bar container">
+        <div class="filter-group">
+            <label for="categoryFilter">Category:</label>
+            <select id="categoryFilter">
+                <option value="all">All Services</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Home Services">Home Services</option>
+                <option value="Tutoring">Tutoring</option>
+                <option value="Photography">Photography</option>
+                <option value="Repair">Repair</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <button id="resetFiltersBtn" class="reset-btn">Reset Filters</button>
+    </div>
+    
+    <div class="main-content container">
+        <div class="cards" id="jobCards">
+             <div style="text-align: center; padding: 40px; color: var(--muted); grid-column: 1 / -1;">
+                <h3>Loading Available Services...</h3>
+                <p>Ensure you are logged in to view posts.</p>
             </div>
         </div>
     </div>
-
+    
     <div class="modal-backdrop" id="applyModal">
         <div class="modal">
             <h3 class="hand-drawn">Apply for <span id="jobTitle"></span></h3>
             <form id="applyForm">
+                <input type="hidden" id="jobIdInput">
                 <div class="field">
-                    <input type="text" id="applicantName" placeholder="Full Name" required>
+                    <label for="applicantName">Full Name</label>
+                    <input type="text" id="applicantName" placeholder="Your full legal name" required>
                 </div>
                 <div class="field">
-                    <input type="email" id="applicantEmail" placeholder="Email" required>
+                    <label for="applicantEmail">Email Address</label>
+                    <input type="email" id="applicantEmail" placeholder="your.email@example.com" required>
                 </div>
                 <div class="field">
-                    <label>Upload CV/Document</label>
-                    <input type="file" id="applicantDoc" accept=".pdf,.doc,.docx" required>
+                    <label for="applicantPhone">Phone Number</label>
+                    <input type="tel" id="applicantPhone" placeholder="Your contact number" required>
                 </div>
-                <div class="modal form-actions">
-                    <button type="submit" class="apply-btn">Submit Application</button>
-                    <button type="button" class="cancel-btn" onclick="closeApplyModal()">Cancel</button>
+                <div class="field">
+                    <label for="applicantMessage">Why are you interested? (Optional)</label>
+                    <textarea id="applicantMessage" placeholder="Tell the provider why you're the right fit..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="apply-btn cancel-btn" onclick="closeApplyModal()">Cancel</button>
+                    <button type="submit" class="apply-btn" id="submitApplicationBtn">Submit Application</button>
                 </div>
             </form>
         </div>
     </div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, orderBy, addDoc, doc, getDoc, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAOzsToiVP9BsevCDOjF54w341zIJghm_Y",
+        authDomain: "walkin-3c91d.firebaseapp.com",
+        projectId: "walkin-3c91d",
+        storageBucket: "walkin-3c91d.firebasestorage.app",
+        messagingSenderId: "145040800467",
+        appId: "1:145040800467:web:3075cc56710dd5eaef7226",
+        measurementId: "G-1EK3FBEBH7"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Global state
+    let currentUser = null;
+    let allJobs = [];
+    let currentJobId = null;
+
+    const modal = document.getElementById("applyModal");
+    const jobTitleEl = document.getElementById("jobTitle");
+    const form = document.getElementById("applyForm");
+    const jobCards = document.getElementById("jobCards"); 
+    const submitApplicationBtn = document.getElementById("submitApplicationBtn");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const resetFiltersBtn = document.getElementById("resetFiltersBtn");
     
-    <footer>
-        <p>This is the footer. Add copyright info here.</p>
-    </footer>
+    window.openApplyModal = openApplyModal;
+    window.closeApplyModal = closeApplyModal;
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, orderBy, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAOzsToiVP9BsevCDOjF54w341zIJghm_Y",
-            authDomain: "walkin-3c91d.firebaseapp.com",
-            projectId: "walkin-3c91d",
-            storageBucket: "walkin-3c91d.firebasestorage.app",
-            messagingSenderId: "145040800467",
-            appId: "1:145040800467:web:3075cc56710dd5eaef7226",
-            measurementId: "G-1EK3FBEBH7"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
-        let currentUser = null;
-        let currentJobId = null;
-
-        const modal = document.getElementById("applyModal");
-        const jobTitleEl = document.getElementById("jobTitle");
-        const form = document.getElementById("applyForm");
-
-        // Authentication state listener
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            if (user) {
-                loadJobs();
-            } else {
-                // Redirect to home if not authenticated
-                window.location.href = 'home.html';
-            }
-        });
-
-        // Load jobs from Firestore
-        async function loadJobs() {
-            try {
-                const jobsQuery = query(
-                    collection(db, 'jobs'),
-                    where('status', '==', 'open'),
-                    orderBy('createdAt', 'desc')
-                );
-                const jobsSnap = await getDocs(jobsQuery);
-                
-                const feed = document.querySelector('.feed');
-                if (!feed) {
-                    console.error('Feed element not found');
-                    return;
-                }
-                
-                feed.innerHTML = '';
-                
-                if (jobsSnap.empty) {
-                    feed.innerHTML = `
-                        <div class="post">
-                            <div style="text-align: center; padding: 40px; color: var(--muted);">
-                                <h3>No jobs available</h3>
-                                <p>Be the first to post a job!</p>
-                                <a href="profile.html" class="btn btn-primary" style="margin-top: 20px; display: inline-block;">Post a Job</a>
-                            </div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                for (const jobDoc of jobsSnap.docs) {
-                    const job = { id: jobDoc.id, ...jobDoc.data() };
-                    const jobCard = createJobCard(job);
-                    feed.appendChild(jobCard);
-                }
-                
-            } catch (error) {
-                console.error('Error loading jobs:', error);
-                const feed = document.querySelector('.feed');
-                if (feed) {
-                    feed.innerHTML = `
-                        <div class="post">
-                            <div style="text-align: center; padding: 40px; color: #dc3545;">
-                                <h3>Error loading jobs</h3>
-                                <p>Please check your internet connection and refresh the page.</p>
-                                <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 20px;">Refresh Page</button>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        // Create job card
-        function createJobCard(job) {
-            const post = document.createElement('div');
-            post.className = 'post';
-            
-            const timeAgo = getTimeAgo(job.createdAt.toDate());
-            
-            post.innerHTML = `
-                <div class="post-header">
-                    <div class="avatar">${job.providerName ? job.providerName[0].toUpperCase() : 'U'}</div>
-                    <div class="user-info">
-                        <strong>${job.providerName || 'Unknown Provider'}</strong> <br>
-                        <span>@${job.category.toLowerCase()} · ${timeAgo}</span>
-                    </div>
-                </div>
-                <div class="post-content">
-                    <h3 class="hand-drawn">${job.title}</h3>
-                    <p>${job.description}</p>
-                    ${job.imageUrl ? `<img src="${job.imageUrl}" class="post-image" alt="job image">` : ''}
-                    <p><strong>₹${job.price}</strong> · ${job.category}</p>
-                </div>
-                <div class="post-footer">
-                    <button class="apply-btn" onclick="openApplyModal('${job.id}', '${job.title}')">Apply Now</button>
+    // Authentication state listener
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        if (user) {
+            loadJobs();
+        } else {
+            jobCards.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--muted); grid-column: 1 / -1;">
+                    <h3>Please Log In to View Services</h3>
+                    <p>You need to be signed in to explore and apply for jobs.</p>
+                    <a href="home.html" class="apply-btn" style="display: inline-block; margin-top: 20px;">Go to Home / Login</a>
                 </div>
             `;
-            
-            return post;
         }
+    });
 
-        // Get time ago string
-        function getTimeAgo(date) {
-            const now = new Date();
-            const diffInSeconds = Math.floor((now - date) / 1000);
+    // Load jobs from Firestore
+    async function loadJobs() {
+        jobCards.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--muted); grid-column: 1 / -1;"><h3>Loading services...</h3></div>';
+        try {
+            const jobsQuery = query(
+                collection(db, 'jobs'),
+                where('status', '==', 'open'),
+                orderBy('createdAt', 'desc'),
+                limit(50)
+            );
+            const jobsSnap = await getDocs(jobsQuery);
             
-            if (diffInSeconds < 60) return 'just now';
-            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-            return `${Math.floor(diffInSeconds / 86400)}d ago`;
-        }
-
-        function openApplyModal(jobId, title) {
-            currentJobId = jobId;
-            jobTitleEl.textContent = title;
-            modal.style.display = "flex";
-            
-            // Pre-fill form with user data if available
-            if (currentUser) {
-                loadUserProfile();
-            }
-        }
-
-        function closeApplyModal() {
-            modal.style.display = "none";
-            form.reset();
-            currentJobId = null;
-        }
-
-        // Load user profile for pre-filling form
-        async function loadUserProfile() {
-            try {
-                const profileRef = doc(db, 'profiles', currentUser.uid);
-                const profileSnap = await getDoc(profileRef);
-                
-                if (profileSnap.exists()) {
-                    const profile = profileSnap.data();
-                    document.getElementById('applicantName').value = profile.username || '';
-                    document.getElementById('applicantEmail').value = profile.email || '';
-                }
-            } catch (error) {
-                console.error('Error loading profile:', error);
-            }
-        }
-
-        // Application form submission
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('applicantName').value;
-            const email = document.getElementById('applicantEmail').value;
-            const docFile = document.getElementById('applicantDoc').files[0];
-            
-            if (!name || !email || !docFile) {
-                alert('Please fill all fields and upload a document');
+            if (jobsSnap.empty) {
+                allJobs = [];
+                jobCards.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--muted); grid-column: 1 / -1;">
+                        <h3>No services available right now</h3>
+                        <p>Be the first to post a job from your Profile page!</p>
+                        <a href="profile.html" class="apply-btn" style="margin-top: 20px; display: inline-block;">Post a Service</a>
+                    </div>
+                `;
                 return;
             }
             
-            try {
-                // Upload CV/Document
-                const docRef = ref(storage, `applications/${Date.now()}_${docFile.name}`);
-                await uploadBytes(docRef, docFile);
-                const docUrl = await getDownloadURL(docRef);
-                
-                // Get job details
-                const jobRef = doc(db, 'jobs', currentJobId);
-                const jobSnap = await getDoc(jobRef);
-                const job = jobSnap.data();
-                
-                // Save application to Firestore
-                const applicationData = {
-                    jobId: currentJobId,
-                    applicantUid: currentUser.uid,
-                    applicantName: name,
-                    applicantEmail: email,
-                    providerUid: job.providerUid,
-                    status: 'pending',
-                    docUrl: docUrl,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
+            const rawJobs = jobsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            const providerUids = rawJobs.map(job => job.providerUid);
+            const uniqueUids = [...new Set(providerUids)];
+            
+            const profilePromises = uniqueUids.map(uid => getDoc(doc(db, 'profiles', uid)));
+            const profileSnaps = await Promise.all(profilePromises);
+            
+            const profileMap = profileSnaps.reduce((map, snap) => {
+                if (snap.exists()) {
+                    map[snap.id] = snap.data();
+                }
+                return map;
+            }, {});
+
+            allJobs = rawJobs.map(job => {
+                const profile = profileMap[job.providerUid] || {};
+                return {
+                    ...job,
+                    profileName: job.providerName || profile.username || 'Unknown Provider',
+                    profileOccupation: profile.occupation || 'Professional',
+                    profileImageURL: profile.profileImageURL,
                 };
-                
-                await addDoc(collection(db, 'applications'), applicationData);
-                
-                alert("✅ Application submitted successfully!");
-                closeApplyModal();
-                
-            } catch (error) {
-                console.error('Error submitting application:', error);
-                alert('Error submitting application. Please try again.');
+            });
+
+            renderJobs(allJobs);
+            
+        } catch (error) {
+            console.error('Error loading jobs:', error);
+            jobCards.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #dc3545; grid-column: 1 / -1;">
+                    <h3>Error loading services</h3>
+                    <p>Database error: ${error.message}</p>
+                    <button onclick="location.reload()" class="apply-btn" style="margin-top: 20px;">Refresh Page</button>
+                </div>
+            `;
+        }
+    }
+    
+    function renderJobs(jobList) {
+        jobCards.innerHTML = ''; 
+
+        if (jobList.length === 0) {
+            jobCards.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--muted); grid-column: 1 / -1;">
+                    <h3>No matching services found.</h3>
+                    <p>Try broadening your search or filter criteria.</p>
+                </div>
+            `;
+            return;
+        }
+
+        jobList.forEach(job => {
+            const jobCard = createJobCard(job);
+            jobCards.appendChild(jobCard);
+        });
+    }
+
+    function createJobCard(job) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.setAttribute('onclick', `openApplyModal('${job.id}', '${job.title.replace(/'/g, "\\'")}')`)
+        
+        const timeAgo = job.createdAt && job.createdAt.toDate ? getTimeAgo(job.createdAt.toDate()) : 'n/a';
+        const initial = job.profileName[0].toUpperCase();
+        
+        const imageURL = job.profileImageURL || job.imageUrl;
+        const avatarContent = imageURL
+            ? `<img src="${imageURL}" alt="P">` 
+            : `<span>${initial}</span>`;
+        
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="avatar" 
+  onclick="event.stopPropagation(); window.location.href='user-profile.html?uid=${job.providerUid}'" 
+  style="cursor: pointer;" 
+  title="View ${job.profileName}'s profile">
+  ${avatarContent}
+</div>
+
+                <div class="user-info">
+                    <strong>${job.profileName}</strong> 
+                    <span>${job.profileOccupation} · ${timeAgo}</span>
+                </div>
+            </div>
+            
+            <span class="badge">${job.category}</span>
+            <h3 class="hand-drawn">${job.title}</h3>
+            ${job.imageUrl ? `<img src="${job.imageUrl}" class="card-image" alt="Job image">` : ''}
+            <p>${job.description.substring(0, 150)}${job.description.length > 150 ? '...' : ''}</p>
+            
+            <div class="price-row">
+                <span class="price">₹${job.price}</span>
+                <button class="apply-btn apply-btn-card" onclick="event.stopPropagation(); openApplyModal('${job.id}', '${job.title.replace(/'/g, "\\'")}')">Apply Now</button>
+            </div>
+        `;
+        
+        return card;
+    }
+
+    function filterJobs() {
+        const query = searchInput.value.toLowerCase().trim();
+        const category = categoryFilter.value;
+
+        let filteredJobs = allJobs.filter(job => {
+            if (category !== 'all' && job.category !== category) {
+                return false;
             }
+
+            if (query.length > 0) {
+                const searchString = `${job.title} ${job.description} ${job.category} ${job.profileOccupation} ${job.profileName}`.toLowerCase();
+                if (!searchString.includes(query)) {
+                    return false;
+                }
+            }
+            
+            return true;
         });
 
-        // Close modal when clicking outside
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeApplyModal();
+        renderJobs(filteredJobs);
+    }
+    
+    searchInput.addEventListener('input', filterJobs);
+    categoryFilter.addEventListener('change', filterJobs);
+    
+    resetFiltersBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        categoryFilter.value = 'all';
+        renderJobs(allJobs);
+    });
+
+    function getTimeAgo(date) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return 'just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    }
+
+    function openApplyModal(jobId, title) {
+        if (!currentUser) {
+            alert("Please log in to apply for a job.");
+            window.location.href = 'home.html';
+            return;
+        }
+        currentJobId = jobId;
+        jobTitleEl.textContent = title;
+        document.getElementById('jobIdInput').value = jobId;
+        modal.classList.add("show");
+        
+        loadUserProfile();
+    }
+
+    function closeApplyModal() {
+        modal.classList.remove("show");
+        form.reset();
+        currentJobId = null;
+    }
+
+    async function loadUserProfile() {
+        let profileRef = doc(db, 'profiles', currentUser.uid);
+        let applicantNameInput = document.getElementById('applicantName');
+        let applicantEmailInput = document.getElementById('applicantEmail');
+        let applicantPhoneInput = document.getElementById('applicantPhone');
+        
+        try {
+            const profileSnap = await getDoc(profileRef);
+            
+            if (profileSnap.exists()) {
+                const profile = profileSnap.data();
+                applicantNameInput.value = profile.username || currentUser.displayName || '';
+                applicantEmailInput.value = profile.email || currentUser.email || '';
+                applicantPhoneInput.value = profile.phone || '';
+            } else {
+                applicantNameInput.value = currentUser.displayName || '';
+                applicantEmailInput.value = currentUser.email || '';
             }
-        });
-    </script>
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            applicantNameInput.value = currentUser.displayName || '';
+            applicantEmailInput.value = currentUser.email || '';
+        }
+    }
+
+    // Application form submission (NO DOCUMENT UPLOAD)
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('applicantName').value;
+        const email = document.getElementById('applicantEmail').value;
+        const phone = document.getElementById('applicantPhone').value;
+        const message = document.getElementById('applicantMessage').value;
+        const jobId = document.getElementById('jobIdInput').value;
+        
+        if (!name || !email || !phone || !jobId) {
+            alert('Please fill all required fields');
+            return;
+        }
+        
+        submitApplicationBtn.disabled = true;
+        submitApplicationBtn.textContent = 'Submitting...';
+        
+        try {
+            const jobRef = doc(db, 'jobs', jobId);
+            const jobSnap = await getDoc(jobRef);
+            
+            if (!jobSnap.exists()) {
+                throw new Error("Job not found. Application failed.");
+            }
+            const job = jobSnap.data();
+            
+            // Save application to Firestore (NO DOCUMENT)
+            const applicationData = {
+                jobId: jobId,
+                jobTitle: job.title,
+                applicantUid: currentUser.uid,
+                applicantName: name,
+                applicantEmail: email,
+                applicantPhone: phone,
+                applicantMessage: message || 'No message provided',
+                providerUid: job.providerUid,
+                status: 'pending',
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            };
+            
+            await addDoc(collection(db, 'applications'), applicationData);
+            
+            alert("✅ Application submitted successfully! The service provider will be notified.");
+            closeApplyModal();
+            
+        } catch (error) {
+            console.error('Error submitting application:', error);
+            alert(`Error submitting application. Please try again. Error: ${error.message}`);
+        } finally {
+            submitApplicationBtn.disabled = false;
+            submitApplicationBtn.textContent = 'Submit Application';
+        }
+    });
+
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeApplyModal();
+        }
+    });
+</script>
 </body>
 </html>

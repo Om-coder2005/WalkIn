@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WalkIn — User Profile</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Color Palette */
+      --primary: #6c574c; /* Deep Brown */
+      --primary-light: #9e827a;
+      --bg: #fbf9f4; /* Off-White/Cream */
+      --surface: #fff;
+      --text: #30251f; /* Darkest Brown/Text */
+      --text-light: #5e534f;
+      --muted: #8b7f75;
+      --border: #d9d2cc;
+      
+      /* Spacing and Dimensions */
+      --radius: 12px; /* Slightly larger radius */
+      --shadow: 0 6px 20px rgba(0,0,0,0.08); /* Stronger, softer shadow */
+      --shadow-hover: 0 10px 30px rgba(0,0,0,0.12);
+      
+      /* Typography */
+      --font-body: "Inter", sans-serif;
+      --font-logo: "Caveat", cursive;
+    }
+
+    /* --- Base Resets and Body --- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6; /* Improved readability */
+    }
+
+    /* --- Navbar Styling --- */
+    nav {
+      background: var(--surface);
+      border-bottom: none; /* Removing border for a cleaner look */
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Lighter shadow */
+      position: sticky; /* Keep navbar visible on scroll */
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px; /* Slightly wider max-width */
+      margin: 0 auto;
+      padding: 16px 32px; /* More vertical padding */
+    }
+
+    .logo {
+      font-family: var(--font-logo);
+      font-weight: 700;
+      font-size: 2rem; /* Slightly larger logo */
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .logo:hover {
+        color: var(--text);
+    }
+
+    .nav-links a {
+      margin: 0 20px; /* More spacing */
+      text-decoration: none;
+      color: var(--text-light);
+      font-weight: 500;
+      font-size: 0.95rem;
+      position: relative;
+      padding: 2px 0;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+    /* Simple active/hover effect for better feedback */
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background-color: var(--primary);
+        transition: width 0.3s ease-out;
+    }
+    .nav-links a:hover::after,
+    .nav-links a[href*="profile.html"]::after { /* Highlight active page */
+        width: 100%;
+    }
+
+
+    /* --- Main Content Container --- */
+    main {
+      max-width: 700px; /* Optimal width for reading text */
+      margin: 80px auto; /* More vertical breathing room */
+      background: var(--surface);
+      /* Removed border for a floating card look */
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px 50px; /* More horizontal padding */
+      transition: box-shadow 0.3s;
+    }
+    main:hover {
+        box-shadow: var(--shadow-hover);
+    }
+
+    /* --- Profile Header --- */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 25px; /* Increased gap */
+      border-bottom: 2px solid var(--border); /* Solid, slightly thicker line */
+      padding-bottom: 25px;
+      margin-bottom: 35px;
+    }
+
+    .avatar {
+      width: 90px; /* Slightly larger avatar */
+      height: 90px;
+      border-radius: 50%;
+      background: var(--primary-light); /* Lighter primary color for avatar */
+      color: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px; /* Larger font size */
+      font-weight: 700;
+      border: 3px solid var(--primary); /* Border for definition */
+      flex-shrink: 0; /* Prevents shrinking */
+    }
+
+    .profile-header h2 {
+      margin: 0;
+      font-size: 2rem; /* Larger, more impactful name */
+      font-weight: 800; /* Bolder name */
+      color: var(--text);
+    }
+
+    .profile-header p {
+        color: var(--muted) !important; /* Email should be subdued */
+        font-weight: 500;
+        margin-top: 5px !important;
+    }
+
+
+    /* --- Profile Details Section --- */
+    .profile-details {
+        padding-top: 10px;
+    }
+
+    .profile-details p {
+      font-size: 1.05rem; /* Slightly larger text for main content */
+      color: var(--text-light);
+      margin: 18px 0; /* More spacing between detail lines */
+      padding: 0;
+      display: flex;
+      align-items: baseline;
+    }
+
+    .profile-details strong {
+        color: var(--primary); /* Primary color for labels */
+        font-weight: 700;
+        display: inline-block;
+        min-width: 110px; /* Align the content vertically */
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+    
+    .profile-details span {
+        color: var(--text);
+        font-weight: 500;
+    }
+    
+    /* Special styling for Bio for better presentation */
+    .profile-details #userBio {
+        display: block;
+        background: var(--bg);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+        padding: 15px;
+        margin-top: 5px;
+        line-height: 1.7;
+        font-style: italic;
+        color: var(--text-light);
+    }
+    .profile-details p:last-child {
+        display: block; /* Bio paragraph should take full width */
+    }
+
+
+    /* --- Footer --- */
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 0; /* More padding */
+      font-size: 13px;
+    }
+
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrap">
+      <a class="logo" href="home.html">WalkIn</a>
+      <div class="nav-links">
+        <a href="home.html">Home</a>
+        <a href="explore.html">Explore</a>
+        <a href="profile.html">Profile</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="profile-header">
+      <div class="avatar" id="userAvatar">U</div>
+      <div>
+        <h2 id="userName">Loading...</h2>
+        <p id="userEmail" style="font-size:0.95rem;"></p>
+      </div>
+    </div>
+
+    <div class="profile-details" id="profileContainer">
+      <p><strong>Contact:</strong> <span id="userContact">Loading...</span></p>
+      <p><strong>Education:</strong> <span id="userEducation">Loading...</span></p>
+      <p><strong>Occupation:</strong> <span id="userOccupation">Loading...</span></p>
+      <p><strong>Bio:</strong> <span id="userBio">Loading...</span></p>
+    </div>
+  </main>
+
+  <div class="footer">© 2025 WalkIn · Built in Kolhapur</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAOzsToiVP9BsevCDOjF54w341zIJghm_Y",
+      authDomain: "walkin-3c91d.firebaseapp.com",
+      projectId: "walkin-3c91d",
+      storageBucket: "walkin-3c91d.firebasestorage.app",
+      messagingSenderId: "145040800467",
+      appId: "1:145040800467:web:3075cc56710dd5eaef7226",
+      measurementId: "G-1EK3FBEBH7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get("uid");
+
+    if (userId) {
+      const profileRef = doc(db, "profiles", userId);
+
+      onSnapshot(profileRef, (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+
+          document.getElementById("userName").textContent = data.name || "Unnamed";
+          document.getElementById("userEmail").textContent = data.email || "Not available";
+          document.getElementById("userContact").textContent = data.contact || "Not provided";
+          document.getElementById("userEducation").textContent = data.education || "Not provided";
+          document.getElementById("userOccupation").textContent = data.occupation || "Not specified";
+          document.getElementById("userBio").textContent = data.bio || "No bio yet.";
+
+          // Update avatar with first letter of name
+          const firstLetter = (data.name || "U").charAt(0).toUpperCase();
+          document.getElementById("userAvatar").textContent = firstLetter;
+        } else {
+          document.getElementById("profileContainer").innerHTML = "<p>User profile not found.</p>";
+        }
+      });
+    } else {
+      document.getElementById("profileContainer").innerHTML = "<p>Invalid user ID.</p>";
+    }
+  </script>
+</body>
+</html>
