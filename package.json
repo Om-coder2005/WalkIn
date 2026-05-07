@@ -1,8 +1,8 @@
 {
   "name": "new",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "WalkIn - Connecting local talent in Kolhapur.",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"

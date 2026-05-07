@@ -5,73 +5,72 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // 1. CORS Configuration
 app.use(cors({ 
-    origin: ['http://127.0.0.1:5500', 'http://localhost:5500'] 
+    origin: ['http://127.0.0.1:5500', 'http://localhost:5500', 'http://localhost:3000'] 
 }));
 
-// 2. Define Storage Paths (These must be created by the system/user)
-const profileUploadDir = path.join(__dirname, 'uploads/profile-images');
-const docUploadDir = path.join(__dirname, 'uploads/application-docs');
+// 2. Define Storage Paths
+const UPLOADS_BASE = path.join(__dirname, 'uploads');
+const PROFILE_IMAGES_DIR = path.join(UPLOADS_BASE, 'profile-images');
+const APPLICATION_DOCS_DIR = path.join(UPLOADS_BASE, 'application-docs');
 
-// Create base uploads directory if it doesn't exist
-if (!fs.existsSync(path.join(__dirname, 'uploads'))) {
-    fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
-}
+// Ensure base directories exist
+[UPLOADS_BASE, PROFILE_IMAGES_DIR, APPLICATION_DOCS_DIR].forEach(dir => {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+        console.log(`Created directory: ${dir}`);
+    }
+});
 
-// 3. Multer Storage Configuration (saves to the local disk)
+// 3. Multer Storage Configuration
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        let destination = profileUploadDir; 
+        let destination = PROFILE_IMAGES_DIR; 
 
         // Logic to switch destination based on CV upload marker
+        // Note: userId must be sent BEFORE the file in the multipart form
         if (req.body.userId && req.body.userId.includes('-doc-')) {
-            destination = docUploadDir; 
-        }
-
-        // CRITICAL: Ensure the specific destination directory exists
-        if (!fs.existsSync(destination)) {
-            fs.mkdirSync(destination, { recursive: true });
+            destination = APPLICATION_DOCS_DIR; 
         }
 
         cb(null, destination); 
     },
     filename: (req, file, cb) => {
-        // Create a unique filename using the userId and a timestamp
         const userId = req.body.userId || 'unknown';
         const fileExtension = path.extname(file.originalname);
-        cb(null, `${userId}-${Date.now()}${fileExtension}`);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `${userId}-${uniqueSuffix}${fileExtension}`);
     }
 });
 
-// Multer upload middleware: expects the form field name 'profileImage'
-const upload = multer({ storage: storage }).single('profileImage');
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+}).single('profileImage');
 
-// 4. API Endpoint: POST /api/upload-profile-image
+// 4. API Endpoints
 app.post('/api/upload-profile-image', (req, res) => {
     upload(req, res, (err) => {
-        if (err) {
-            console.error("Upload error:", err);
-            return res.status(500).json({ message: 'File upload failed on the server.' });
+        if (err instanceof multer.MulterError) {
+            console.error("Multer error:", err);
+            return res.status(400).json({ message: `Upload error: ${err.message}` });
+        } else if (err) {
+            console.error("General upload error:", err);
+            return res.status(500).json({ message: 'Server error during file upload.' });
         }
 
         if (!req.file) {
              return res.status(400).json({ message: 'No file was uploaded.' });
         }
 
-        // Determine the correct public URL based on the storage path
-        let publicPath = 'profile-images'; 
-        if (req.file.destination === docUploadDir) {
-            publicPath = 'application-docs';
-        }
-        
-        const publicImageUrl = `http://localhost:${port}/uploads/${publicPath}/${req.file.filename}`;
+        const subfolder = req.file.destination === APPLICATION_DOCS_DIR ? 'application-docs' : 'profile-images';
+        const publicImageUrl = `http://localhost:${port}/uploads/${subfolder}/${req.file.filename}`;
 
-        console.log(`File uploaded successfully to: ${publicImageUrl}`);
+        console.log(`File uploaded successfully: ${req.file.filename}`);
         
-        // Respond with the public URL
         res.status(200).json({
             message: 'File uploaded successfully.',
             url: publicImageUrl
@@ -79,11 +78,21 @@ app.post('/api/upload-profile-image', (req, res) => {
     });
 });
 
-// 5. Static File Serving (Must be defined after the endpoint, but essential)
-// This allows both /uploads/profile-images and /uploads/application-docs to be accessible
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 
-// 6. Start Server
+// 5. Static File Serving
+app.use('/uploads', express.static(UPLOADS_BASE));
+
+// 6. Global Error Handler
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// 7. Start Server
 app.listen(port, () => {
-    console.log(`Custom upload server running at http://localhost:${port}`);
+    console.log(`WalkIn Upload Server running at http://localhost:${port}`);
 });

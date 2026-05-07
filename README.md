@@ -8,7 +8,6 @@ WalkIn is a community-driven platform designed to connect local talent in Kolhap
 - **Job/Service Posting**: Post services you offer or jobs you need help with, complete with pricing and categories.
 - **Application Tracking**: Manage applications for your posts and track the status of jobs you've applied for.
 - **Success Stories**: Explore and celebrate successful connections within the Kolhapur community.
-- **Multilingual Support**: Available in English, Hindi (हिन्दी), and Marathi (मराठी).
 - **Secure Authentication**: Powered by Firebase for a seamless login/signup experience.
 
 ## 🛠️ Tech Stack
@@ -59,7 +58,6 @@ WalkIn is a community-driven platform designed to connect local talent in Kolhap
 - `explore.html`: Discover success stories and available opportunities.
 - `profile.html`: User profile management and activity dashboard.
 - `server.js`: Express server for handling local file uploads.
-- `index.js`: Firebase Cloud Function for secure image uploads.
 - `uploads/`: Local directory for stored profile images and documents.
 
 ## 🤝 Contributing
